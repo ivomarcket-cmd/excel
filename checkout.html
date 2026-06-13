@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, follow">
+  <title>Pago completo - Paquete de productos digitales</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://connect.facebook.net" crossorigin>
+  <link rel="preconnect" href="https://www.facebook.com" crossorigin>
+  <link rel="preconnect" href="https://js.stripe.com">
+  <link rel="preconnect" href="https://www.paypal.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #061417;
+      --panel: #0b2430;
+      --gold: #d6a84f;
+      --gold-2: #a97822;
+      --text: #f8fafc;
+      --muted: #a1a1aa;
+      --line: rgba(255,255,255,.1);
+      --green: #22c55e;
+      --radius: 10px;
+      --shadow: 0 24px 80px rgba(0,0,0,.45);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Cairo", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(700px 320px at 70% 0%, rgba(214,168,79,.16), transparent 62%),
+        radial-gradient(520px 280px at 12% 12%, rgba(20,184,166,.12), transparent 64%),
+        linear-gradient(215deg, #061417, #0b2430 48%, #071513);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    .wrap {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 24px;
+      color: #d4d4d8;
+      font-size: .92rem;
+      font-weight: 800;
+    }
+    .back {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 13px;
+      background: rgba(255,255,255,.05);
+    }
+    .checkout-layout {
+      display: flex;
+      justify-content: center;
+      align-items: start;
+    }
+    .pay-card {
+      width: 100%;
+      max-width: 480px;
+    }
+    .summary, .pay-card {
+      border: 1px solid rgba(212,175,55,.24);
+      border-radius: 14px;
+      background: rgba(7,24,40,.86);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .summary { padding: clamp(22px, 4vw, 34px); }
+    .eyebrow {
+      display: inline-flex;
+      border: 1px solid rgba(212,175,55,.36);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: #f6e7b0;
+      background: rgba(212,175,55,.08);
+      font-size: .82rem;
+      font-weight: 900;
+    }
+    h1 {
+      margin: 16px 0 12px;
+      font-size: clamp(2.25rem, 5vw, 4.15rem);
+      line-height: 1.12;
+      font-weight: 900;
+    }
+    .gold { color: var(--gold); }
+    .summary p {
+      margin: 0 0 20px;
+      color: #dbeafe;
+      font-size: 1.06rem;
+    }
+    .product-shot {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin: 22px 0;
+      background: #030810;
+    }
+    .product-shot img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: block;
+      object-fit: cover;
+    }
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .mini {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255,255,255,.045);
+    }
+    .mini strong {
+      display: block;
+      color: var(--gold);
+      direction: ltr;
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+    .mini span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 800;
+    }
+    .pay-head {
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid rgba(212,175,55,.14);
+      background: linear-gradient(180deg, rgba(212,175,55,.08), transparent);
+    }
+    .badge {
+      display: inline-flex;
+      margin-bottom: 10px;
+      border: 1px solid rgba(34,197,94,.3);
+      border-radius: 999px;
+      padding: 5px 11px;
+      color: #86efac;
+      background: rgba(34,197,94,.1);
+      font-size: .78rem;
+      font-weight: 900;
+    }
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+    .old-price { color: #71717a; text-decoration: line-through; direction: ltr; }
+    .new-price {
+      color: var(--gold);
+      font-size: 2.2rem;
+      font-weight: 900;
+      direction: ltr;
+      line-height: 1;
+    }
+    .save {
+      border-radius: 6px;
+      padding: 2px 8px;
+      background: rgba(34,197,94,.14);
+      color: #86efac;
+      font-size: .76rem;
+      font-weight: 900;
+    }
+    .pay-body { padding: 20px 24px 24px; }
+    .includes {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 20px;
+      padding: 0;
+      list-style: none;
+      color: #d4d4d8;
+      font-weight: 800;
+      font-size: .93rem;
+    }
+    .includes li::before { content: "✓"; color: #4ade80; margin-left: 8px; }
+    .order-bump {
+      display: none;
+      margin: 16px 0 18px;
+      border: 1px solid rgba(212,175,55,.38);
+      border-radius: 10px;
+      padding: 14px;
+      background: rgba(212,175,55,.08);
+    }
+    .order-bump.active { display: block; }
+    .bump-media {
+      display: none;
+      width: 86px;
+      height: 86px;
+      border: 1px solid rgba(212,175,55,.22);
+      border-radius: 8px;
+      object-fit: cover;
+      flex: 0 0 86px;
+      background: var(--panel);
+    }
+    .bump-media.active { display: block; }
+    .order-bump label {
+      display: grid;
+      grid-template-columns: 22px auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      cursor: pointer;
+    }
+    .order-bump label:not(:has(.bump-media.active)) {
+      grid-template-columns: 22px minmax(0, 1fr);
+    }
+    .order-bump input {
+      width: 18px;
+      height: 18px;
+      margin-top: 4px;
+      accent-color: var(--gold);
+    }
+    .bump-title-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--text);
+      font-weight: 900;
+    }
+    .bump-title-row strong:last-child { color: var(--gold); direction: ltr; white-space: nowrap; }
+    .bump-desc {
+      margin: 4px 0 0;
+      color: #d4d4d8;
+      font-size: .84rem;
+      line-height: 1.55;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 18px 0 10px;
+      color: #a1a1aa;
+      font-size: .78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .step span {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--gold);
+      background: rgba(212,175,55,.14);
+      border: 1px solid rgba(212,175,55,.34);
+    }
+    .field { margin-bottom: 10px; }
+    .field label {
+      display: block;
+      margin-bottom: 5px;
+      color: #a1a1aa;
+      font-size: .82rem;
+      font-weight: 800;
+    }
+    .field input {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: var(--text);
+      background: rgba(255,255,255,.055);
+      direction: ltr;
+      text-align: right;
+      outline: none;
+    }
+    .field input:focus { border-color: rgba(212,175,55,.62); box-shadow: 0 0 0 3px rgba(212,175,55,.1); }
+    .field input.co-invalid { border-color: #f87171; box-shadow: 0 0 0 3px rgba(248,113,113,.12); }
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px;
+      padding: 5px;
+      background: rgba(0,0,0,.24);
+    }
+    .tab {
+      min-height: 48px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: #a1a1aa;
+      background: transparent;
+      cursor: pointer;
+      font-weight: 900;
+    }
+    .tab.active {
+      color: var(--gold);
+      border-color: rgba(212,175,55,.36);
+      background: rgba(212,175,55,.1);
+    }
+    .btn {
+      width: 100%;
+      min-height: 58px;
+      border: 0;
+      border-radius: 8px;
+      color: #111;
+      background: linear-gradient(180deg,#f6e7b0,var(--gold) 54%,var(--gold-2));
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+    .total {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 16px 0;
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: #d4d4d8;
+      font-weight: 900;
+    }
+    .total strong { color: var(--gold); direction: ltr; font-size: 1.28rem; }
+    #paypal-button-container { min-height: 48px; }
+    .stripe-inline-panel {
+      display: none;
+      overflow: hidden;
+      margin-top: 14px;
+      border: 1px solid rgba(212,175,55,.28);
+      border-radius: 10px;
+      background: var(--panel);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+    .stripe-inline-panel.active { display: block; }
+    .stripe-inline-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 15px;
+      background: var(--panel);
+      border-bottom: 1px solid rgba(212,175,55,.22);
+    }
+    .stripe-inline-head h2 { margin: 0; font-size: 1rem; }
+    .stripe-inline-head p { margin: 2px 0 0; color: var(--muted); font-size: .78rem; }
+    .stripe-close {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      background: rgba(255,255,255,.06);
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+    #embedded-checkout {
+      min-height: 360px;
+      padding: 16px;
+      background: var(--panel);
+      direction: ltr;
+    }
+    .note {
+      margin: 10px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: .84rem;
+    }
+
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 20px, 1120px); padding-top: 16px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .pay-head, .pay-body { padding-inline: 18px; }
+      .mini-grid { grid-template-columns: 1fr; }
+      h1 { font-size: clamp(2rem, 11vw, 2.75rem); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <a class="back" href="./index.html">← Volver a ver</a>
+      <span>Pago Seguro - Llegada inmediata tras la confirmación del pedido.</span>
+    </header>
+
+    <main class="checkout-layout">
+
+
+      <aside class="pay-card" aria-label="Pago completo">
+        <div class="pay-head">
+          <span class="badge">Paga solo una vez</span>
+          <h2 style="margin:0 0 10px;font-size:1.22rem">Paquete completo de productos digitales</h2>
+          <div class="price-row">
+            <span class="old-price">$199</span>
+            <span class="new-price" id="card-price">$29</span>
+            <span class="save">ahorrar 85%</span>
+          </div>
+        </div>
+
+        <div class="pay-body">
+          <ul class="includes">
+            <li>Derechos de modificación y participación</li>
+            <li>Plantillas, libros, cursos y archivos listos para usar.</li>
+            <li>Descargue la página inmediatamente después del pago</li>
+          </ul>
+
+          <div class="order-bump" id="order-bump-box">
+            <label for="order-bump-checkbox">
+              <input id="order-bump-checkbox" type="checkbox">
+              <img class="bump-media" id="order-bump-image" alt="" loading="lazy">
+              <span>
+                <span class="bump-title-row">
+                  <strong id="order-bump-name">Pack extra premium</strong>
+                  <strong id="order-bump-price">$9</strong>
+                </span>
+                <span class="bump-desc" id="order-bump-description">Añade recursos premium adicionales a tu pedido.</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="step"><span>1</span> Información del contacto</div>
+          <div class="field">
+            <label for="lead-name">nombre completo</label>
+            <input id="lead-name" type="text" placeholder="Mohamed Ahmed" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="lead-email">correo electrónico *</label>
+            <input id="lead-email" type="email" placeholder="email@example.com" autocomplete="email">
+          </div>
+
+          <div class="step"><span>2</span> Elige el método de pago</div>
+          <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="card" type="button" role="tab" aria-selected="true">tarjeta bancaria</button>
+            <button class="tab" data-tab="paypal" type="button" role="tab" aria-selected="false">PayPal</button>
+          </div>
+
+          <div id="pane-card">
+            <button class="btn" id="stripe-checkout-button" type="button">Paga ahora - <span id="stripe-price-label">$29</span></button>
+            <div class="stripe-inline-panel" id="stripe-inline-panel" aria-hidden="true">
+              <div class="stripe-inline-head">
+                <div>
+                  <h2>Pago seguro con tarjeta</h2>
+                  <p>Complete los datos de la tarjeta aquí dentro de la página de pago.</p>
+                </div>
+                <button class="stripe-close" id="stripe-close" type="button" aria-label="Cerrar pago">x</button>
+              </div>
+              <div id="embedded-checkout"></div>
+              <div style="padding:0 16px 16px;background:var(--panel)">
+                <button class="btn" id="stripe-confirm-button" type="button" style="display:none">Confirmar pago</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="pane-paypal" style="display:none">
+            <div id="paypal-button-container"></div>
+          </div>
+
+          <div class="total">
+            <span>Demanda total</span>
+            <strong id="card-price-total">$29</strong>
+          </div>
+          <p class="note">Después del pago, serás llevado automáticamente a la página de acceso.. Utilice una dirección de correo electrónico válida para recibir la confirmación..</p>
+          <p class="note">Al pagar aceptas <a href="./terms.html" style="color:var(--gold)">Términos y condiciones</a></p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const DEFAULT_SITE_CONFIG = {
+      price: 29,
+      currency: "USD",
+      productName: "Paquete completo de productos digitales",
+      successUrl: "/success.html?paid=paypal",
+      stripePublishableKey: "pk_live_YOUR_STRIPE_PUBLISHABLE_KEY",
+      stripePriceId: "price_YOUR_STRIPE_PRICE_ID",
+      orderBumpEnabled: false,
+      orderBumpName: "Pack extra premium",
+      orderBumpDescription: "Añade recursos premium adicionales a tu pedido.",
+      orderBumpImageUrl: "",
+      orderBumpPrice: 9,
+      orderBumpStripePriceId: "",
+      upsellEnabled: false,
+      upsellName: "Actualizacion PRO",
+      upsellDescription: "Oferta especial disponible despues de la compra.",
+      upsellPrice: 19,
+      upsellStripePriceId: "",
+      paypalClientId: "YOUR_PAYPAL_CLIENT_ID",
+      paypalMerchantId: "YOUR_PAYPAL_MERCHANT_ID",
+      metaPixelId: "",
+      gtmId: ""
+    };
+    let SITE_CONFIG = { ...DEFAULT_SITE_CONFIG };
+
+    const formatMoney = (amount, currency) => new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency,
+      maximumFractionDigits: amount % 1 === 0 ? 0 : 2
+    }).format(amount);
+
+    async function loadSiteConfig() {
+      try {
+        const response = await fetch("/api/config", { cache: "no-store" });
+        if (response.ok) SITE_CONFIG = { ...SITE_CONFIG, ...(await response.json()) };
+        if (Number(SITE_CONFIG.price) === 27) SITE_CONFIG.price = 29;
+      } catch (_) {}
+    }
+
+    function applySiteConfig() {
+      const price = formatMoney(getCheckoutTotal(), SITE_CONFIG.currency);
+      document.getElementById("card-price").textContent = formatMoney(SITE_CONFIG.price, SITE_CONFIG.currency);
+      ["card-price-total", "stripe-price-label"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = price;
+      });
+      const bumpBox = document.getElementById("order-bump-box");
+      const hasBump = SITE_CONFIG.orderBumpEnabled && Number(SITE_CONFIG.orderBumpPrice) > 0;
+      bumpBox?.classList.toggle("active", !!hasBump);
+      document.getElementById("order-bump-name").textContent = SITE_CONFIG.orderBumpName || "Pack extra premium";
+      document.getElementById("order-bump-description").textContent = SITE_CONFIG.orderBumpDescription || "";
+      document.getElementById("order-bump-price").textContent = formatMoney(Number(SITE_CONFIG.orderBumpPrice) || 0, SITE_CONFIG.currency);
+      const bumpImage = document.getElementById("order-bump-image");
+      const bumpImageUrl = String(SITE_CONFIG.orderBumpImageUrl || "").trim();
+      if (bumpImageUrl) {
+        bumpImage.src = bumpImageUrl;
+        bumpImage.classList.add("active");
+      } else {
+        bumpImage.removeAttribute("src");
+        bumpImage.classList.remove("active");
+      }
+    }
+
+    function isOrderBumpSelected() {
+      return document.getElementById("order-bump-checkbox")?.checked === true
+        && SITE_CONFIG.orderBumpEnabled
+        && Number(SITE_CONFIG.orderBumpPrice) > 0;
+    }
+
+    function getCheckoutTotal() {
+      const bump = isOrderBumpSelected() ? Number(SITE_CONFIG.orderBumpPrice) || 0 : 0;
+      return (Number(SITE_CONFIG.price) || 0) + bump;
+    }
+
+    function getMetaEventId(name) {
+      const key = "meta_event_id:" + window.location.pathname + ":" + name;
+      let id = sessionStorage.getItem(key);
+      if (!id) {
+        id = `${name}.${Date.now()}.${Math.random().toString(36).slice(2, 10)}`;
+        sessionStorage.setItem(key, id);
+      }
+      return id;
+    }
+
+    function trackMeta(name, payload = {}, options = {}) {
+      if (typeof window.fbq !== "function") return;
+      const eventId = options.eventId || getMetaEventId(name);
+      const dedupeKey = "meta_tracked:" + eventId;
+      if (options.once !== false && sessionStorage.getItem(dedupeKey)) return;
+      sessionStorage.setItem(dedupeKey, "1");
+      window.fbq("track", name, payload, { eventID: eventId });
+    }
+
+    function initMetaPixel() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlPixelId = urlParams.get("pixel") || urlParams.get("fb_pixel") || urlParams.get("pixel_id");
+      if (urlPixelId) {
+        sessionStorage.setItem("override_pixel_id", urlPixelId);
+      }
+      const activePixelId = sessionStorage.getItem("override_pixel_id") || SITE_CONFIG.metaPixelId;
+
+      if (!activePixelId || typeof window.fbq === "function") return;
+      window.fbq = function () {
+        window.fbq.callMethod ? window.fbq.callMethod.apply(window.fbq, arguments) : window.fbq.queue.push(arguments);
+      };
+      window.fbq.push = window.fbq;
+      window.fbq.loaded = true;
+      window.fbq.version = "2.0";
+      window.fbq.queue = [];
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://connect.facebook.net/en_US/fbevents.js";
+      document.head.appendChild(script);
+      window.fbq("init", activePixelId);
+      trackMeta("PageView", {}, { once: true });
+      trackMeta("InitiateCheckout", {
+        content_ids: ["digital-products-pack"],
+        content_type: "product",
+        content_name: SITE_CONFIG.productName,
+        value: getCheckoutTotal(),
+        currency: SITE_CONFIG.currency,
+        num_items: 1
+      }, { once: true });
+    }
+
+    function redirectToSuccess(paypalOrderId) {
+      const url = new URL(SITE_CONFIG.successUrl, window.location.origin);
+      if (paypalOrderId) url.searchParams.set("paypal_order_id", paypalOrderId);
+      window.location.href = url.pathname + url.search;
+    }
+
+    async function captureCartLead() {
+      const email = (document.getElementById("lead-email")?.value || "").trim();
+      const name = (document.getElementById("lead-name")?.value || "").trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+      if (typeof window.fbq === "function") {
+        trackMeta("Lead", {
+          content_name: SITE_CONFIG.productName,
+          value: getCheckoutTotal(),
+          currency: SITE_CONFIG.currency
+        }, { eventId: "checkout.lead." + email.toLowerCase(), once: true });
+      }
+      try {
+        await fetch("/api/cart-leads", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, name, page: window.location.href })
+        });
+      } catch (_) {}
+    }
+
+    function validateEmail(input) {
+      const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((input?.value || "").trim());
+      input?.classList.toggle("co-invalid", !ok);
+      return ok;
+    }
+
+    function initPaymentTabs() {
+      const tabs = document.querySelectorAll(".tab");
+      const paneCard = document.getElementById("pane-card");
+      const panePaypal = document.getElementById("pane-paypal");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => {
+            t.classList.toggle("active", t === tab);
+            t.setAttribute("aria-selected", String(t === tab));
+          });
+          const isCard = tab.dataset.tab === "card";
+          paneCard.style.display = isCard ? "" : "none";
+          panePaypal.style.display = isCard ? "none" : "";
+          if (!isCard) {
+            const bump = document.getElementById("order-bump-checkbox");
+            if (bump) bump.checked = false;
+            applySiteConfig();
+          }
+        });
+      });
+    }
+
+    function initStripeCheckout() {
+      const button = document.getElementById("stripe-checkout-button");
+      const inlinePanel = document.getElementById("stripe-inline-panel");
+      const close = document.getElementById("stripe-close");
+      const container = document.getElementById("embedded-checkout");
+      const confirmButton = document.getElementById("stripe-confirm-button");
+      let stripeInstance = null;
+      let elements = null;
+      let paymentIntentId = null;
+      let stripeScriptPromise = null;
+
+      function loadStripeScript() {
+        if (window.Stripe) return Promise.resolve();
+        if (stripeScriptPromise) return stripeScriptPromise;
+        stripeScriptPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://js.stripe.com/v3/";
+          script.async = true;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+        return stripeScriptPromise;
+      }
+
+      function createPaymentIntent() {
+        return fetch("/create-payment-intent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            locale: "auto",
+            productName: SITE_CONFIG.productName,
+            orderBump: isOrderBumpSelected(),
+            email: (document.getElementById("lead-email")?.value || "").trim()
+          })
+        }).then((r) => r.json()).then((d) => {
+          if (!d.clientSecret) throw new Error(d.error || "Stripe error.");
+          paymentIntentId = d.paymentIntentId;
+          return d.clientSecret;
+        });
+      }
+
+      const closeCheckout = () => {
+        inlinePanel.classList.remove("active");
+        inlinePanel.setAttribute("aria-hidden", "true");
+        confirmButton.style.display = "none";
+        if (elements) {
+          elements = null;
+          container.innerHTML = "";
+        }
+      };
+      close.addEventListener("click", closeCheckout);
+
+      button.addEventListener("click", async () => {
+        const emailInput = document.getElementById("lead-email");
+        if (!validateEmail(emailInput)) {
+          emailInput?.focus();
+          return;
+        }
+        await captureCartLead();
+        if (!SITE_CONFIG.stripePublishableKey || SITE_CONFIG.stripePublishableKey.includes("YOUR_STRIPE")) {
+          alert("Poner Stripe Publishable Key adentro SITE_CONFIG.stripePublishableKey.");
+          return;
+        }
+        button.disabled = true;
+        button.textContent = "Cargando pago seguro...";
+        inlinePanel.classList.add("active");
+        inlinePanel.setAttribute("aria-hidden", "false");
+        try {
+          await loadStripeScript();
+          stripeInstance = window.Stripe(SITE_CONFIG.stripePublishableKey);
+          const clientSecret = await createPaymentIntent();
+          elements = stripeInstance.elements({
+            clientSecret,
+            appearance: {
+              theme: "night",
+              variables: {
+                colorPrimary: "#d6a84f",
+                colorBackground: "#0b2430",
+                colorText: "#f8fafc",
+                colorDanger: "#f87171",
+                borderRadius: "8px",
+                fontFamily: "Cairo, system-ui, sans-serif"
+              }
+            }
+          });
+          const paymentElement = elements.create("payment", {
+            layout: "tabs",
+            fields: { billingDetails: { email: "never" } },
+            terms: { card: "never" },
+            defaultValues: {
+              billingDetails: {
+                email: (document.getElementById("lead-email")?.value || "").trim(),
+                name: (document.getElementById("lead-name")?.value || "").trim()
+              }
+            }
+          });
+          paymentElement.mount("#embedded-checkout");
+          confirmButton.style.display = "";
+        } catch (error) {
+          closeCheckout();
+          alert(error.message || "No se puede iniciar el pago a través de Stripe.");
+        } finally {
+          button.disabled = false;
+          button.innerHTML = `Paga ahora - <span id="stripe-price-label">${formatMoney(getCheckoutTotal(), SITE_CONFIG.currency)}</span>`;
+        }
+      });
+
+      confirmButton.addEventListener("click", async () => {
+        if (!stripeInstance || !elements) return;
+        confirmButton.disabled = true;
+        confirmButton.textContent = "Se esta confirmando el pago...";
+        const result = await stripeInstance.confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: `${window.location.origin}/success.html?paid=stripe&payment_intent=${encodeURIComponent(paymentIntentId || "")}`,
+            payment_method_data: {
+              billing_details: {
+                email: (document.getElementById("lead-email")?.value || "").trim(),
+                name: (document.getElementById("lead-name")?.value || "").trim()
+              }
+            }
+          },
+          redirect: "if_required"
+        });
+        if (result.error) {
+          alert(result.error.message || "Pago no completado. Intentar otra vez.");
+          confirmButton.disabled = false;
+          confirmButton.textContent = "Confirmar pago";
+          return;
+        }
+        window.location.href = `/success.html?paid=stripe&payment_intent=${encodeURIComponent(paymentIntentId || result.paymentIntent?.id || "")}`;
+      });
+    }
+
+    function loadPayPalSdk() {
+      const target = document.getElementById("paypal-button-container");
+      if (!SITE_CONFIG.paypalClientId || SITE_CONFIG.paypalClientId.includes("YOUR_PAYPAL")) {
+        target.innerHTML = "<p class='note'>Poner PayPal Client ID adentro SITE_CONFIG.paypalClientId para activar PayPal.</p>";
+        return;
+      }
+      const script = document.createElement("script");
+      const merchantParam = SITE_CONFIG.paypalMerchantId && !SITE_CONFIG.paypalMerchantId.includes("YOUR_PAYPAL")
+        ? `&merchant-id=${encodeURIComponent(SITE_CONFIG.paypalMerchantId)}`
+        : "";
+      script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(SITE_CONFIG.paypalClientId)}&currency=${encodeURIComponent(SITE_CONFIG.currency)}&intent=capture${merchantParam}`;
+      script.async = true;
+      script.onload = renderPayPalButtons;
+      script.onerror = () => { target.innerHTML = "<p class='note'>No se puede cargar PayPal. Utilice la tarjeta o inténtelo de nuevo.</p>"; };
+      document.head.appendChild(script);
+    }
+
+    function renderPayPalButtons() {
+      if (!window.paypal) return;
+      window.paypal.Buttons({
+        style: { layout: "vertical", color: "gold", shape: "rect", label: "paypal" },
+        createOrder: async () => {
+          await captureCartLead();
+          return fetch("/paypal-create-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productName: SITE_CONFIG.productName })
+          }).then((res) => res.json().then((data) => {
+            if (!res.ok || !data.id) throw new Error(data.error || "PayPal order error.");
+            return data.id;
+          }));
+        },
+        onApprove: (data) => fetch("/paypal-capture-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orderId: data.orderID })
+        }).then((res) => res.json().then((capture) => {
+          if (!res.ok || capture.status !== "COMPLETED") throw new Error(capture.error || "PayPal capture error.");
+          redirectToSuccess(data.orderID);
+        })).catch(() => alert("El pago no se ha completado PayPal. Inténtalo de nuevo o usa la tarjeta.")),
+        onError: () => alert("El pago no se ha completado PayPal. Inténtalo de nuevo o usa la tarjeta.")
+      }).render("#paypal-button-container");
+    }
+
+    async function bootstrap() {
+      await loadSiteConfig();
+      applySiteConfig();
+      initMetaPixel();
+      document.getElementById("order-bump-checkbox")?.addEventListener("change", () => {
+        applySiteConfig();
+        if (isOrderBumpSelected() && typeof window.fbq === "function") {
+          trackMeta("AddToCart", {
+            content_ids: ["order-bump"],
+            content_type: "product",
+            content_name: SITE_CONFIG.orderBumpName,
+            value: SITE_CONFIG.orderBumpPrice,
+            currency: SITE_CONFIG.currency,
+            num_items: 1
+          }, { eventId: "order-bump." + Date.now(), once: false });
+        }
+      });
+      initPaymentTabs();
+      initStripeCheckout();
+      loadPayPalSdk();
+    }
+    bootstrap();
+  </script>
+</body>
+</html>

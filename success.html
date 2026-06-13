@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-P6X6DZCH');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Acceso confirmado - Productos digitales Digital Bundle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://connect.facebook.net" crossorigin>
+  <link rel="preconnect" href="https://www.facebook.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- META PIXEL PLACEHOLDER
+    Pega el mismo código aquí. Meta Pixel Usuario en index.html.
+    hacia StripeHaz que el enlace sea un éxito: /success.html?paid=stripe.
+  -->
+
+  <style>
+    :root {
+      --bg: #061417;
+      --panel: #0b2430;
+      --gold: #d6a84f;
+      --gold-2: #a97822;
+      --text: #f8fafc;
+      --muted: #a1a1aa;
+      --line: rgba(255, 255, 255, 0.1);
+      --success: #22c55e;
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      font-family: "Cairo", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 75% 10%, rgba(214, 168, 79, 0.15), transparent 28%),
+        radial-gradient(circle at 12% 16%, rgba(20, 184, 166, 0.12), transparent 32%),
+        linear-gradient(215deg, #061417 0%, #0b2430 44%, #071513 100%);
+      line-height: 1.5;
+    }
+
+    .card {
+      width: min(760px, 100%);
+      border: 1px solid rgba(212, 175, 55, 0.32);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.035));
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 5px;
+      background: linear-gradient(90deg, var(--gold), #0f8a5f, var(--gold));
+    }
+
+    .content {
+      padding: clamp(24px, 5vw, 46px);
+      text-align: center;
+    }
+
+    .status {
+      width: 76px;
+      height: 76px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      border: 2px solid var(--success);
+      border-radius: 50%;
+      color: #bbf7d0;
+      font-size: 2rem;
+      font-weight: 900;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 5vw, 3.7rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 auto 18px;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .download {
+      display: inline-flex;
+      min-height: 56px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      border-radius: var(--radius);
+      padding: 16px 22px;
+      color: #111111;
+      background: linear-gradient(180deg, #f6e7b0, var(--gold) 54%, var(--gold-2));
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 16px 32px rgba(212, 175, 55, 0.23);
+    }
+
+    .download.disabled {
+      pointer-events: none;
+      opacity: 0.48;
+      filter: grayscale(1);
+    }
+
+    .order-box {
+      display: none;
+      margin: 18px auto 0;
+      max-width: 420px;
+      padding: 16px 20px;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      border-radius: var(--radius);
+      background: rgba(212, 175, 55, 0.07);
+      text-align: center;
+    }
+
+    .order-box.visible { display: block; }
+    .order-label { margin: 0 0 4px; color: var(--muted); font-size: 0.82rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .order-id { margin: 0; font-size: 1.55rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; }
+
+    .note {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      font-size: 0.92rem;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 18px;
+      font-size: 0.88rem;
+    }
+
+    .links a {
+      color: #d4d4d8;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .upsell-box {
+      display: none;
+      margin: 22px auto 0;
+      max-width: 560px;
+      border: 1px solid rgba(212, 175, 55, 0.38);
+      border-radius: 10px;
+      padding: 18px;
+      background: rgba(212, 175, 55, 0.08);
+      text-align: right;
+    }
+    .upsell-box.active { display: block; }
+    .upsell-media {
+      display: none;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      margin-bottom: 14px;
+      border: 1px solid rgba(212, 175, 55, 0.24);
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--panel);
+    }
+    .upsell-media.active { display: block; }
+    .upsell-box h2 {
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-size: 1.25rem;
+    }
+    .upsell-box p {
+      margin: 0 0 14px;
+      max-width: none;
+      font-size: .94rem;
+    }
+    .upsell-price {
+      display: inline-flex;
+      margin-bottom: 12px;
+      color: #bbf7d0;
+      font-size: 1.25rem;
+      font-weight: 900;
+      direction: ltr;
+    }
+    .upsell-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .upsell-actions .download {
+      margin-top: 0;
+      min-height: 48px;
+      padding: 12px 16px;
+      box-shadow: none;
+    }
+    .upsell-panel {
+      display: none;
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: var(--panel);
+      box-shadow: inset 0 0 0 1px rgba(212, 175, 55, .12);
+    }
+    .upsell-panel.active { display: block; }
+    #upsell-checkout {
+      min-height: 360px;
+      direction: ltr;
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P6X6DZCH"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <main class="card">
+    <div class="bar"></div>
+    <div class="content">
+      <div class="status">&#10003;</div>
+      <h1>El pago ha sido confirmado..</h1>
+      <p id="status-message">Verificamos el pago antes de abrir tu panel de producto. No cierres la página ahora..</p>
+      <div class="order-box" id="order-box">
+        <p class="order-label">Tu número de pedido</p>
+        <p class="order-id" id="order-id">—</p>
+      </div>
+      <a class="download disabled" id="download-link" href="./panel.html" rel="nofollow">Ingresa al panel de mis productos</a>
+      <a class="download" id="panel-link" href="./panel.html" rel="nofollow" style="margin-top:10px;background:transparent;border:1px solid rgba(212,175,55,.5);color:var(--gold)">Salta la presentación y entra al panel.</a>
+      <a class="download" id="invoice-link" href="#" rel="nofollow" style="display:none;margin-top:10px;background:transparent;border:1px solid rgba(212,175,55,.5);color:var(--gold)">Ver factura</a>
+      <div class="upsell-box" id="upsell-box">
+        <img class="upsell-media" id="upsell-image" alt="" loading="lazy">
+        <h2 id="upsell-name">Actualizacion PRO</h2>
+        <p id="upsell-description">Oferta especial disponible despues de la compra.</p>
+        <strong class="upsell-price" id="upsell-price">$19</strong>
+        <div class="upsell-actions">
+          <button class="download" id="upsell-button" type="button">Añadir oferta ahora</button>
+          <button class="download" id="upsell-dismiss" type="button" style="background:transparent;border:1px solid rgba(255,255,255,.18);color:#d4d4d8">No, gracias</button>
+        </div>
+        <div class="upsell-panel" id="upsell-panel">
+          <div id="upsell-checkout"></div>
+        </div>
+      </div>
+      <p class="note">Después de confirmar el pago, el panel Mis Productos se abrirá automáticamente. Guarde el número de pedido como referencia cuando sea necesario.</p>
+      <nav class="links" aria-label="Enlaces legales">
+        <a href="./privacy.html">Privacidad</a>
+        <a href="./terms.html">Términos</a>
+        <a href="./refund.html">recuperación</a>
+        <a href="./delivery.html">Entrega</a>
+        <a href="./contact.html">Contáctenos</a>
+      </nav>
+    </div>
+  </main>
+
+  <script>
+    let DELIVERY_CONFIG = {
+      downloadUrl: "",
+      price: 29,
+      currency: "USD",
+      supportEmail: "support@example.com",
+      stripePublishableKey: "pk_live_YOUR_STRIPE_PUBLISHABLE_KEY",
+      upsellEnabled: false,
+      upsellName: "Actualizacion PRO",
+      upsellDescription: "Oferta especial disponible despues de la compra.",
+      upsellImageUrl: "",
+      upsellPrice: 19,
+      upsellStripePriceId: "",
+      metaPixelId: "",
+      gtmId: ""
+    };
+
+    const downloadLink = document.getElementById("download-link");
+    const statusMessage = document.getElementById("status-message");
+    const params = new URLSearchParams(window.location.search);
+    const paidSource = params.get("paid");
+    const sessionId = params.get("session_id");
+    const paymentIntentId = params.get("payment_intent");
+    const paypalOrderId = params.get("paypal_order_id");
+    const isUpsellReturn = params.get("upsell") === "1";
+
+    const formatMoney = (amount, currency) => new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency,
+      maximumFractionDigits: Number(amount) % 1 === 0 ? 0 : 2
+    }).format(Number(amount) || 0);
+
+    async function loadDeliveryConfig() {
+      try {
+        const response = await fetch("/api/config", { cache: "no-store" });
+        if (!response.ok) return;
+        const remoteConfig = await response.json();
+        DELIVERY_CONFIG = { ...DELIVERY_CONFIG, ...remoteConfig };
+        if (Number(DELIVERY_CONFIG.price) === 27) DELIVERY_CONFIG.price = 29;
+      } catch (error) {
+        console.warn("Remote delivery config unavailable. Using file defaults.");
+      }
+    }
+
+    function initMetaPixel() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlPixelId = urlParams.get("pixel") || urlParams.get("fb_pixel") || urlParams.get("pixel_id");
+      if (urlPixelId) {
+        sessionStorage.setItem("override_pixel_id", urlPixelId);
+      }
+      const activePixelId = sessionStorage.getItem("override_pixel_id") || DELIVERY_CONFIG.metaPixelId;
+
+      if (!activePixelId || typeof window.fbq === "function") return;
+
+      window.fbq = function () {
+        window.fbq.callMethod ? window.fbq.callMethod.apply(window.fbq, arguments) : window.fbq.queue.push(arguments);
+      };
+      if (!window._fbq) window._fbq = window.fbq;
+      window.fbq.push = window.fbq;
+      window.fbq.loaded = true;
+      window.fbq.version = "2.0";
+      window.fbq.queue = [];
+
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://connect.facebook.net/en_US/fbevents.js";
+      document.head.appendChild(script);
+
+      window.fbq("init", activePixelId);
+      trackMeta("PageView", {}, { once: true });
+    }
+
+    function initGTM() {
+      const gtmId = String(DELIVERY_CONFIG.gtmId || "").trim();
+      if (!gtmId) return;
+      const gtmSrc = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(gtmId)}`;
+      if ([...document.scripts].some((script) => script.src === gtmSrc)) return;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = gtmSrc;
+      document.head.appendChild(script);
+    }
+
+    function initTracking() {
+      initMetaPixel(); // Purchase siempre debe llegar a Meta sin importar consent
+      if (localStorage.getItem("cookieConsent") === "accepted") {
+        initGTM();
+      }
+    }
+
+    const orderBox = document.getElementById("order-box");
+    const orderIdEl = document.getElementById("order-id");
+
+    function showOrderNumber(orderId) {
+      orderIdEl.textContent = orderId;
+      orderBox.classList.add("visible");
+    }
+
+    const invoiceLinkEl = document.getElementById("invoice-link");
+    const panelLinkEl = document.getElementById("panel-link");
+
+    function rememberPanelAccess(orderId, email) {
+      if (orderId) sessionStorage.setItem("digital_order_id", orderId);
+      if (email) sessionStorage.setItem("digital_order_email", String(email).trim().toLowerCase());
+    }
+
+    function goToPanel(delay = 0) {
+      window.setTimeout(() => {
+        window.location.href = "./panel.html";
+      }, delay);
+    }
+
+    function unlockDownload(orderId, invoiceUrl, email) {
+      if (orderId) showOrderNumber(orderId);
+      if (invoiceUrl) { invoiceLinkEl.href = invoiceUrl; invoiceLinkEl.style.display = "inline-flex"; }
+      rememberPanelAccess(orderId, email);
+
+      downloadLink.href = "./panel.html";
+      downloadLink.classList.remove("disabled");
+      downloadLink.textContent = "Ingresa al panel de mis productos";
+      panelLinkEl.href = "./panel.html";
+
+      const upsellShown = showUpsell();
+      if (upsellShown) {
+        statusMessage.textContent = "El pago ha sido confirmado.. Puedes agregar la oferta especial ahora o omitirla e ingresar a tu panel de productos..";
+        return;
+      }
+
+      statusMessage.textContent = "El pago ha sido confirmado.. Su panel de productos ahora se abrirá.";
+      goToPanel(1200);
+    }
+
+    function getCookieValue(name) {
+      const match = document.cookie.match(new RegExp(`(?:^|; )${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}=([^;]*)`));
+      return match ? decodeURIComponent(match[1]) : "";
+    }
+
+    function getMetaEventId(name) {
+      const key = "meta_event_id:" + window.location.pathname + ":" + name;
+      let id = sessionStorage.getItem(key);
+      if (!id) {
+        id = `${name}.${Date.now()}.${Math.random().toString(36).slice(2, 10)}`;
+        sessionStorage.setItem(key, id);
+      }
+      return id;
+    }
+
+    function trackMeta(name, payload = {}, options = {}) {
+      if (typeof window.fbq !== "function") return;
+      const eventId = options.eventId || getMetaEventId(name);
+      const dedupeKey = "meta_tracked:" + eventId;
+      if (options.once !== false && sessionStorage.getItem(dedupeKey)) return;
+      sessionStorage.setItem(dedupeKey, "1");
+      window.fbq("track", name, payload, { eventID: eventId });
+    }
+
+    function trackPurchase(eventId) {
+      if (typeof window.fbq !== "function") return;
+      const payload = {
+        content_ids: ["digital-products-pack"],
+        content_type: "product",
+        content_name: DELIVERY_CONFIG.productName || "Digital Products Pack",
+        value: DELIVERY_CONFIG.price,
+        currency: DELIVERY_CONFIG.currency,
+        num_items: 1
+      };
+      if (eventId) {
+        const storageKey = "meta_purchase_tracked:" + eventId;
+        if (sessionStorage.getItem(storageKey)) return;
+        sessionStorage.setItem(storageKey, "1");
+        window.fbq("track", "Purchase", payload, { eventID: eventId });
+        return;
+      }
+      trackMeta("Purchase", payload, { once: true });
+    }
+
+    function showUpsell() {
+      const canShow = !isUpsellReturn
+        && DELIVERY_CONFIG.upsellEnabled
+        && Number(DELIVERY_CONFIG.upsellPrice) > 0
+        && DELIVERY_CONFIG.stripePublishableKey
+        && !DELIVERY_CONFIG.stripePublishableKey.includes("YOUR_STRIPE");
+      if (!canShow) return false;
+      document.getElementById("upsell-name").textContent = DELIVERY_CONFIG.upsellName || "Actualizacion PRO";
+      document.getElementById("upsell-description").textContent = DELIVERY_CONFIG.upsellDescription || "";
+      document.getElementById("upsell-price").textContent = formatMoney(DELIVERY_CONFIG.upsellPrice, DELIVERY_CONFIG.currency);
+      const upsellImage = document.getElementById("upsell-image");
+      const upsellImageUrl = String(DELIVERY_CONFIG.upsellImageUrl || "").trim();
+      if (upsellImageUrl) {
+        upsellImage.src = upsellImageUrl;
+        upsellImage.classList.add("active");
+      } else {
+        upsellImage.removeAttribute("src");
+        upsellImage.classList.remove("active");
+      }
+      document.getElementById("upsell-box").classList.add("active");
+      return true;
+    }
+
+    function initUpsellCheckout() {
+      const box = document.getElementById("upsell-box");
+      const panel = document.getElementById("upsell-panel");
+      const button = document.getElementById("upsell-button");
+      const dismiss = document.getElementById("upsell-dismiss");
+      let stripeScriptPromise = null;
+      let embeddedCheckout = null;
+
+      dismiss.addEventListener("click", () => {
+        box.classList.remove("active");
+        goToPanel(250);
+      });
+
+      function loadStripeScript() {
+        if (window.Stripe) return Promise.resolve();
+        if (stripeScriptPromise) return stripeScriptPromise;
+        stripeScriptPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://js.stripe.com/v3/";
+          script.async = true;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+        return stripeScriptPromise;
+      }
+
+      button.addEventListener("click", async () => {
+        if (button.dataset.intentLoaded === "true") return;
+        button.disabled = true;
+        button.textContent = "Cargando la presentación...";
+        panel.classList.add("active");
+        try {
+          await loadStripeScript();
+          const stripe = window.Stripe(DELIVERY_CONFIG.stripePublishableKey);
+          const intentData = await fetch("/create-payment-intent", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                locale: "auto",
+                checkoutType: "upsell",
+                productName: DELIVERY_CONFIG.upsellName,
+                email: sessionStorage.getItem("digital_order_email") || ""
+              })
+            }).then((res) => res.json());
+          if (!intentData.clientSecret) throw new Error(intentData.error || "Stripe error.");
+          embeddedCheckout = stripe.elements({
+            clientSecret: intentData.clientSecret,
+            appearance: {
+              theme: "night",
+              variables: {
+                colorPrimary: "#d6a84f",
+                colorBackground: "#0b2430",
+                colorText: "#f8fafc",
+                colorDanger: "#f87171",
+                borderRadius: "8px",
+                fontFamily: "Cairo, system-ui, sans-serif"
+              }
+            }
+          });
+          const paymentElement = embeddedCheckout.create("payment", {
+            layout: "tabs",
+            fields: { billingDetails: { email: "never" } },
+            terms: { card: "never" },
+            defaultValues: {
+              billingDetails: {
+                email: sessionStorage.getItem("digital_order_email") || ""
+              }
+            }
+          });
+          paymentElement.mount("#upsell-checkout");
+          button.dataset.intentLoaded = "true";
+          button.textContent = "Confirmar pago";
+          button.onclick = async () => {
+            button.disabled = true;
+            button.textContent = "Se esta confirmando el pago...";
+            const result = await stripe.confirmPayment({
+              elements: embeddedCheckout,
+              confirmParams: {
+                return_url: `${window.location.origin}/success.html?paid=stripe&upsell=1&payment_intent=${encodeURIComponent(intentData.paymentIntentId || "")}`,
+                payment_method_data: { billing_details: { email: sessionStorage.getItem("digital_order_email") || "" } }
+              },
+              redirect: "if_required"
+            });
+            if (result.error) {
+              alert(result.error.message || "Pago no completado.");
+              button.disabled = false;
+              button.textContent = "Confirmar pago";
+              return;
+            }
+            window.location.href = `/success.html?paid=stripe&upsell=1&payment_intent=${encodeURIComponent(intentData.paymentIntentId || result.paymentIntent?.id || "")}`;
+          };
+        } catch (error) {
+          panel.classList.remove("active");
+          alert(error.message || "No se puede cargar la presentación upsell.");
+        } finally {
+          button.disabled = false;
+          if (button.dataset.intentLoaded !== "true") {
+            button.textContent = "Añadir oferta ahora";
+          }
+        }
+      });
+    }
+
+    async function registerOrder(method, locale) {
+      try {
+        const activePixelId = sessionStorage.getItem("override_pixel_id") || DELIVERY_CONFIG.metaPixelId;
+        const body = {
+          method,
+          locale,
+          sourceUrl: window.location.href,
+          trackingConsent: localStorage.getItem("cookieConsent") === "accepted",
+          fbp: getCookieValue("_fbp"),
+          fbc: getCookieValue("_fbc"),
+          pixelId: activePixelId
+        };
+        if (method === "stripe" && sessionId) body.sessionId = sessionId;
+        if (method === "stripe" && paymentIntentId) body.paymentIntentId = paymentIntentId;
+        if (method === "paypal" && paypalOrderId) body.paypalOrderId = paypalOrderId;
+
+        const res = await fetch("/order-complete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.orderId) return data;
+        return { error: data.error || `Order registration failed with HTTP ${res.status}.` };
+      } catch (error) {
+        return { error: error.message || "Order registration failed." };
+      }
+      return { error: "Order registration failed." };
+    }
+
+    async function handleStripe() {
+      if (!sessionId && !paymentIntentId) {
+        statusMessage.textContent = "No se encontró ningún pago Stripe Válido. Si ya has pagado, contacta con soporte.";
+        return;
+      }
+
+      statusMessage.textContent = "Se está verificando el pago...";
+      try {
+        const result = await registerOrder("stripe", navigator.language || "ar");
+        if (result && result.orderId) {
+          unlockDownload(result.orderId, result.invoiceUrl, result.email);
+          trackPurchase(result.metaEventId || result.orderId);
+        } else {
+          statusMessage.textContent = result?.error
+            ? "Se realizó el pago, pero no se pudo registrar el pedido.: " + result.error
+            : "El pago aún no aparece como completado. Espere unos segundos y luego actualice la página..";
+        }
+      } catch (_) {
+        statusMessage.textContent = "No se pudo verificar el pago. Póngase en contacto con el soporte si el importe ha sido debitado.";
+      }
+    }
+
+    async function handlePaypal() {
+      if (!paypalOrderId) {
+        statusMessage.textContent = "No se encontró ninguna solicitud PayPal justo. Si ya has pagado, contacta con soporte.";
+        return;
+      }
+      const storageKey = "digital_products_paypal_order:" + paypalOrderId;
+      const cachedRaw = sessionStorage.getItem(storageKey);
+      if (cachedRaw) {
+        try {
+          const cached = JSON.parse(cachedRaw);
+          unlockDownload(cached.orderId, cached.invoiceUrl, cached.email);
+          trackPurchase(cached.metaEventId || cached.orderId);
+          return;
+        } catch (_) {}
+      }
+      const result = await registerOrder("paypal", navigator.language || "ar");
+      if (result && result.orderId) sessionStorage.setItem(storageKey, JSON.stringify(result));
+      if (result && result.orderId) {
+        unlockDownload(result.orderId, result.invoiceUrl, result.email);
+        trackPurchase(result.metaEventId || result.orderId);
+      } else {
+        statusMessage.textContent = result?.error
+          ? "Se realizó el pago, pero no se pudo registrar el pedido.: " + result.error
+          : "Se realizó el pago, pero no se pudo registrar el pedido.. Póngase en contacto con el soporte si el importe ha sido debitado.";
+      }
+    }
+
+    async function bootstrapDelivery() {
+      await loadDeliveryConfig();
+      initTracking();
+      initUpsellCheckout();
+
+      if (paidSource === "stripe") {
+        await handleStripe();
+      } else if (paidSource === "paypal") {
+        await handlePaypal();
+      } else {
+        statusMessage.textContent = "Esta página se abre después de completar el proceso de pago..";
+      }
+    }
+
+    bootstrapDelivery();
+  </script>
+</body>
+</html>

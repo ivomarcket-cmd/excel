@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-P6X6DZCH');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>منتجاتي — Digital Products Pack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #06130f;
+      --panel: #0b1d18;
+      --card: #102a23;
+      --line: rgba(255,255,255,.09);
+      --text: #f8fafc;
+      --muted: #71717a;
+      --gold: #d4af37;
+      --green: #22c55e;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Cairo, system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── LOGIN SCREEN ── */
+    .login-screen {
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 20%, rgba(212,175,55,.1), transparent 50%);
+    }
+    .login-card {
+      width: min(440px, 100%);
+      border: 1px solid rgba(212,175,55,.28);
+      border-radius: 14px;
+      background: var(--panel);
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,.5);
+    }
+    .login-bar { height: 5px; background: linear-gradient(90deg,#d4af37,#0f8a5f,#d4af37); }
+    .login-body { padding: 36px 32px; text-align: center; }
+    .login-logo { font-size: 1.5rem; font-weight: 900; color: var(--text); margin-bottom: 6px; }
+    .login-logo span { color: var(--gold); }
+    .login-sub { color: var(--muted); font-size: .9rem; margin-bottom: 32px; }
+    .google-btn {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      width: 100%; padding: 14px 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.06); color: var(--text); font-weight: 800; font-size: .95rem;
+      cursor: pointer; text-decoration: none; transition: background .15s, border-color .15s;
+    }
+    .google-btn:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.3); }
+    .google-icon { width: 20px; height: 20px; }
+    .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--muted); font-size: .82rem; }
+    .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+    .order-form { text-align: left; }
+    .order-form label { display: block; font-size: .82rem; font-weight: 700; color: #d4d4d8; margin-bottom: 6px; }
+    .order-form input {
+      width: 100%; padding: 11px 14px; border: 1px solid var(--line); border-radius: 8px;
+      background: rgba(0,0,0,.35); color: var(--text); font: inherit; margin-bottom: 12px;
+    }
+    .order-form input:focus { outline: none; border-color: rgba(212,175,55,.5); }
+    .order-access-btn {
+      width: 100%; padding: 13px; border: 0; border-radius: 8px;
+      background: linear-gradient(180deg,#f6e7b0,var(--gold) 54%,#b8860b); color: #111;
+      font-weight: 900; font-size: .95rem; cursor: pointer;
+    }
+    .error-msg { margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.3); color: #fca5a5; font-size: .85rem; text-align: center; display: none; }
+    .error-msg.visible { display: block; }
+
+    /* ── PORTAL SCREEN ── */
+    .portal-screen { display: none; }
+    .portal-screen.active { display: block; }
+
+    /* Header */
+    .portal-header {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(10,10,10,.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      padding: 0 24px;
+    }
+    .portal-header-inner {
+      max-width: 1400px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px; gap: 16px;
+    }
+    .portal-brand { font-weight: 900; font-size: 1.05rem; }
+    .portal-brand span { color: var(--gold); }
+    .user-info { display: flex; align-items: center; gap: 10px; }
+    .user-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 2px solid rgba(212,175,55,.4); object-fit: cover;
+      background: rgba(212,175,55,.15); display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: .85rem; color: var(--gold); overflow: hidden;
+    }
+    .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .user-name { font-weight: 700; font-size: .9rem; color: #d4d4d8; }
+    .logout-btn {
+      padding: 7px 14px; border: 1px solid var(--line); border-radius: 6px;
+      background: transparent; color: var(--muted); font: inherit; font-size: .82rem;
+      font-weight: 700; cursor: pointer; text-decoration: none;
+    }
+    .logout-btn:hover { border-color: rgba(239,68,68,.4); color: #fca5a5; }
+
+    /* Main content */
+    .portal-main { max-width: 1400px; margin: 0 auto; padding: 28px 24px 60px; }
+
+    /* Stats bar */
+    .portal-stats {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px; margin-bottom: 22px;
+    }
+    .portal-title { font-size: 1.4rem; font-weight: 900; }
+    .products-count { color: var(--muted); font-size: .9rem; }
+    .products-count strong { color: var(--text); font-weight: 800; }
+
+    /* Category filters */
+    .filters {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
+    }
+    .filter-btn {
+      padding: 7px 16px; border-radius: 999px; border: 1px solid var(--line);
+      background: transparent; color: var(--muted); font: inherit; font-size: .85rem;
+      font-weight: 700; cursor: pointer; transition: all .15s;
+    }
+    .filter-btn:hover { border-color: rgba(255,255,255,.3); color: var(--text); }
+    .filter-btn.active { background: var(--green); border-color: var(--green); color: #fff; font-weight: 900; }
+
+    /* Search */
+    .search-bar {
+      width: 100%; margin-bottom: 20px;
+    }
+    .search-bar input {
+      width: min(360px, 100%); padding: 10px 16px; border: 1px solid var(--line);
+      border-radius: 8px; background: rgba(255,255,255,.04); color: var(--text);
+      font: inherit; font-size: .9rem;
+    }
+    .search-bar input:focus { outline: none; border-color: rgba(212,175,55,.4); }
+
+    /* Product grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .product-card {
+      border-radius: var(--radius); overflow: hidden; background: var(--card);
+      border: 1px solid var(--line); cursor: pointer;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+      text-decoration: none; color: inherit;
+    }
+    .product-card:hover {
+      transform: translateY(-4px); border-color: rgba(255,255,255,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.4);
+    }
+    .product-img {
+      width: 100%; aspect-ratio: 4/3; overflow: hidden; position: relative;
+      background: #222;
+    }
+    .product-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
+    .product-card:hover .product-img img { transform: scale(1.04); }
+    .product-img-placeholder {
+      width: 100%; height: 100%; display: grid; place-items: center;
+      font-size: 2.5rem; color: rgba(255,255,255,.15);
+    }
+    .cat-badge {
+      position: absolute; top: 8px; left: 8px;
+      padding: 3px 10px; border-radius: 999px; font-size: .72rem; font-weight: 900;
+      text-transform: uppercase; letter-spacing: .5px; background: #22c55e; color: #fff;
+    }
+    .product-info { padding: 12px 14px 14px; }
+    .product-name { font-weight: 800; font-size: .88rem; line-height: 1.35; color: var(--text); }
+
+    /* Download modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 50;
+      background: rgba(0,0,0,.75); place-items: center; padding: 20px;
+    }
+    .modal-overlay.active { display: grid; }
+    .modal {
+      width: min(500px,100%); background: var(--panel); border-radius: 14px;
+      border: 1px solid rgba(212,175,55,.28); overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,.5);
+    }
+    .modal-bar { height: 4px; background: linear-gradient(90deg,#d4af37,#0f8a5f,#d4af37); }
+    .modal-body { padding: 28px 28px 24px; }
+    .modal-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 16px; display: none; }
+    .modal-img.visible { display: block; }
+    .modal-cat { font-size: .75rem; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .modal-name { font-size: 1.25rem; font-weight: 900; margin-bottom: 8px; }
+    .modal-desc { color: var(--muted); font-size: .9rem; margin-bottom: 22px; }
+    .modal-actions { display: flex; gap: 10px; }
+    .download-btn {
+      flex: 1; padding: 13px; border: 0; border-radius: 8px;
+      background: linear-gradient(180deg,#f6e7b0,var(--gold) 54%,#b8860b);
+      color: #111; font-weight: 900; font-size: .95rem; cursor: pointer; text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .modal-close {
+      padding: 13px 16px; border: 1px solid var(--line); border-radius: 8px;
+      background: transparent; color: var(--muted); font-weight: 700; cursor: pointer; font: inherit;
+    }
+
+    /* Empty / loading states */
+    .empty-state { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--muted); }
+    .skeleton { animation: pulse 1.5s infinite; background: rgba(255,255,255,.06); border-radius: var(--radius); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+    @media (max-width: 1200px) { .products-grid { grid-template-columns: repeat(4,minmax(0,1fr)); } }
+    @media (max-width: 900px)  { .products-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+    @media (max-width: 600px)  { .products-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .portal-main { padding: 16px; } }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P6X6DZCH"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <!-- ── LOGIN SCREEN ── -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card">
+      <div class="login-bar"></div>
+      <div class="login-body">
+        <div class="login-logo">Digital <span>Pack</span></div>
+        <p class="login-sub" id="login-sub"></p>
+
+        <a class="google-btn" href="/auth/google" id="google-btn">
+          <svg class="google-icon" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          <span id="google-btn-text"></span>
+        </a>
+
+        <div class="divider" id="divider-text"></div>
+
+        <div class="order-form">
+          <label id="email-label"></label>
+          <input type="email" id="order-email" placeholder="email@ejemplo.com">
+          <label id="order-label"></label>
+          <input type="text" id="order-id" placeholder="DP-20260501-0001">
+          <button class="order-access-btn" id="order-access-btn" type="button"></button>
+        </div>
+
+        <div class="error-msg" id="error-msg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PORTAL SCREEN ── -->
+  <div class="portal-screen" id="portal-screen">
+
+    <header class="portal-header">
+      <div class="portal-header-inner">
+        <div class="portal-brand">Digital <span>Pack</span> · <span id="brand-products"></span></div>
+        <div class="user-info">
+          <div class="user-avatar" id="user-avatar">?</div>
+          <span class="user-name" id="user-name"></span>
+          <a class="logout-btn" href="/auth/logout" id="logout-link"></a>
+        </div>
+      </div>
+    </header>
+
+    <main class="portal-main">
+      <div class="portal-stats">
+        <div class="portal-title" id="portal-title"></div>
+        <div class="products-count"><span id="count-prefix"></span> <strong id="count-display">0</strong> <span id="count-suffix"></span></div>
+      </div>
+
+      <div class="filters" id="filters"></div>
+
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="">
+      </div>
+
+      <div class="products-grid" id="products-grid">
+        <!-- filled by JS -->
+      </div>
+    </main>
+  </div>
+
+  <!-- ── DOWNLOAD MODAL ── -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-bar"></div>
+      <div class="modal-body">
+        <img class="modal-img" id="modal-img" alt="">
+        <div class="modal-cat" id="modal-cat"></div>
+        <div class="modal-name" id="modal-name"></div>
+        <div class="modal-desc" id="modal-desc"></div>
+        <div class="modal-actions">
+          <a class="download-btn" id="modal-download" href="#" target="_blank" rel="noopener noreferrer">
+            <span id="download-text"></span>
+          </a>
+          <button class="modal-close" id="modal-close" type="button"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const T = {
+      en: {
+        title: "My Products",
+        loginSub: "Access your digital product library",
+        googleBtn: "Sign in with Google",
+        divider: "or access with your order",
+        emailLabel: "Purchase email",
+        orderLabel: "Order number",
+        accessBtn: "Access my products",
+        verifying: "Verifying...",
+        brandProducts: "My Products",
+        logout: "Logout",
+        portalTitle: "Your product library",
+        countPrefix: "Showing",
+        countSuffix: "products",
+        search: "Search products...",
+        all: "All",
+        emptyCategory: "No products in this category.",
+        download: "Download",
+        close: "Close",
+        missingFields: "Enter your email and order number.",
+        noPurchase: "We could not find a purchase with that email and order number.",
+        denied: "Access denied. Check your details.",
+        network: "Connection error. Try again.",
+        errors: {
+          cancelled: "Sign-in cancelled.",
+          auth_failed: "Could not authenticate with Google.",
+          auth_not_configured: "Google login is not configured yet.",
+          google_invalid_client: "Google Client ID and Client Secret do not match. Check Cloudflare variables.",
+          google_redirect_mismatch: "Google redirect URL is not authorized. Add https://digital.raqmiy.com/auth/callback in Google Cloud.",
+          google_invalid_grant: "Google login expired. Try again.",
+          no_email: "Could not get the Google email.",
+          invalid_state: "Security error. Try again."
+        }
+      },
+      es: {
+        title: "Mis Productos",
+        loginSub: "Accede a tu biblioteca de productos digitales",
+        googleBtn: "Entrar con Google",
+        divider: "o accede con tu pedido",
+        emailLabel: "Email de compra",
+        orderLabel: "Número de pedido",
+        accessBtn: "Acceder a mis productos",
+        verifying: "Verificando...",
+        brandProducts: "Mis Productos",
+        logout: "Cerrar sesión",
+        portalTitle: "Tu biblioteca de productos",
+        countPrefix: "Mostrando",
+        countSuffix: "productos",
+        search: "Buscar productos...",
+        all: "Todos",
+        emptyCategory: "No hay productos en esta categoría.",
+        download: "Descargar",
+        close: "Cerrar",
+        missingFields: "Introduce tu email y número de pedido.",
+        noPurchase: "No encontramos ninguna compra con ese email y número de pedido.",
+        denied: "Acceso denegado. Verifica tus datos.",
+        network: "Error de conexión. Inténtalo de nuevo.",
+        errors: {
+          cancelled: "Inicio de sesión cancelado.",
+          auth_failed: "No se pudo autenticar con Google.",
+          auth_not_configured: "Google no está configurado todavía.",
+          google_invalid_client: "El Client ID y el Client Secret de Google no coinciden. Revisa las variables de Cloudflare.",
+          google_redirect_mismatch: "La URL de redirección no está autorizada. Añade https://digital.raqmiy.com/auth/callback en Google Cloud.",
+          google_invalid_grant: "El login de Google ha caducado. Inténtalo otra vez.",
+          no_email: "No se pudo obtener el email de Google.",
+          invalid_state: "Error de seguridad. Intenta de nuevo."
+        }
+      },
+      pt: {
+        title: "Meus Produtos",
+        loginSub: "Acesse sua biblioteca de produtos digitais",
+        googleBtn: "Entrar com Google",
+        divider: "ou acesse com seu pedido",
+        emailLabel: "Email da compra",
+        orderLabel: "Número do pedido",
+        accessBtn: "Acessar meus produtos",
+        verifying: "Verificando...",
+        brandProducts: "Meus Produtos",
+        logout: "Sair",
+        portalTitle: "Sua biblioteca de produtos",
+        countPrefix: "Mostrando",
+        countSuffix: "produtos",
+        search: "Pesquisar produtos...",
+        all: "Todos",
+        emptyCategory: "Não há produtos nesta categoria.",
+        download: "Baixar",
+        close: "Fechar",
+        missingFields: "Insira seu email e número do pedido.",
+        noPurchase: "Não encontramos uma compra com esse email e número do pedido.",
+        denied: "Acesso negado. Verifique seus dados.",
+        network: "Erro de conexão. Tente novamente.",
+        errors: {
+          cancelled: "Login cancelado.",
+          auth_failed: "Não foi possível autenticar com Google.",
+          auth_not_configured: "O login com Google ainda não está configurado.",
+          google_invalid_client: "O Client ID e o Client Secret do Google não correspondem. Verifique as variáveis no Cloudflare.",
+          google_redirect_mismatch: "A URL de redirecionamento não está autorizada. Adicione https://digital.raqmiy.com/auth/callback no Google Cloud.",
+          google_invalid_grant: "O login do Google expirou. Tente novamente.",
+          no_email: "Não foi possível obter o email do Google.",
+          invalid_state: "Erro de segurança. Tente novamente."
+        }
+      },
+      ar: {
+        title: "منتجاتي",
+        loginSub: "ادخل إلى مكتبة منتجاتك الرقمية",
+        googleBtn: "الدخول عبر Google",
+        divider: "أو ادخل برقم الطلب",
+        emailLabel: "بريد الشراء",
+        orderLabel: "رقم الطلب",
+        accessBtn: "الدخول إلى منتجاتي",
+        verifying: "جار التحقق...",
+        brandProducts: "منتجاتي",
+        logout: "تسجيل الخروج",
+        portalTitle: "مكتبة منتجاتك",
+        countPrefix: "عرض",
+        countSuffix: "منتجات",
+        search: "ابحث عن المنتجات...",
+        all: "الكل",
+        emptyCategory: "لا توجد منتجات في هذه الفئة.",
+        download: "تحميل",
+        close: "إغلاق",
+        missingFields: "أدخل بريدك ورقم الطلب.",
+        noPurchase: "لم نجد عملية شراء بهذا البريد ورقم الطلب.",
+        denied: "تم رفض الوصول. تحقق من البيانات.",
+        network: "خطأ في الاتصال. حاول مرة أخرى.",
+        errors: {
+          cancelled: "تم إلغاء تسجيل الدخول.",
+          auth_failed: "تعذر تسجيل الدخول عبر Google.",
+          auth_not_configured: "تسجيل الدخول عبر Google غير مهيأ بعد.",
+          google_invalid_client: "معرّف العميل وسر العميل في Google غير متطابقين. تحقق من متغيرات Cloudflare.",
+          google_redirect_mismatch: "رابط إعادة التوجيه غير مصرح به. أضف https://digital.raqmiy.com/auth/callback في Google Cloud.",
+          google_invalid_grant: "انتهت صلاحية تسجيل الدخول عبر Google. حاول مرة أخرى.",
+          no_email: "تعذر الحصول على بريد Google.",
+          invalid_state: "خطأ أمني. حاول مرة أخرى."
+        }
+      }
+    };
+
+    const urlParams = new URLSearchParams(location.search);
+    const lang = detectLang();
+    const t = T[lang];
+
+    let allProducts = [];
+    let activeCategory = "all";
+
+    const CATEGORY_COLORS = {
+      "Canva Templates": "#8b5cf6",
+      "Design": "#3b82f6",
+      "Ebook": "#0f8a5f",
+      "Marketing": "#ec4899",
+      "Packs": "#06b6d4",
+      "Digital Products Pack": "#d4af37",
+      "Prompts": "#22c55e",
+      "Tools": "#6366f1",
+      "Website": "#14b8a6",
+      "Otros": "#71717a"
+    };
+
+    applyLanguage();
+
+    // ── Check URL error params ──
+    if (urlParams.get("error")) {
+      showError(t.errors[urlParams.get("error")] || t.errors.auth_failed);
+    }
+
+    // ── Auto-check session on load ──
+    async function init() {
+      try {
+        const res = await fetch("/auth/me", { credentials: "include" });
+        const data = await res.json();
+        if (data.authenticated) {
+          await loadPortal();
+        }
+      } catch (_) {}
+    }
+
+    // ── Order-based access ──
+    document.getElementById("order-access-btn").addEventListener("click", async () => {
+      const email = document.getElementById("order-email").value.trim().toLowerCase();
+      const orderId = document.getElementById("order-id").value.trim().toUpperCase();
+
+      if (!email || !orderId) {
+        showError(t.missingFields);
+        return;
+      }
+
+      const btn = document.getElementById("order-access-btn");
+      btn.textContent = t.verifying;
+      btn.disabled = true;
+
+      try {
+        const res = await fetch("/api/portal-products", {
+          headers: { "x-order-email": email, "x-order-id": orderId }
+        });
+        const data = await res.json();
+
+        if (!res.ok || !data.isPurchaser) {
+          showError(data.code === "NO_PURCHASE"
+            ? t.noPurchase
+            : t.denied);
+        } else {
+          renderPortal(data);
+        }
+      } catch (_) {
+        showError(t.network);
+      } finally {
+        btn.textContent = t.accessBtn;
+        btn.disabled = false;
+      }
+    });
+
+    async function loadPortal() {
+      try {
+        const res = await fetch("/api/portal-products", { credentials: "include" });
+        const data = await res.json();
+        if (res.ok && data.isPurchaser) {
+          renderPortal(data);
+        }
+      } catch (_) {}
+    }
+
+    function renderPortal(data) {
+      allProducts = data.products || [];
+      const user = data.user || {};
+
+      // User info
+      const avatarEl = document.getElementById("user-avatar");
+      if (user.picture) {
+        avatarEl.innerHTML = `<img src="${user.picture}" alt="">`;
+      } else {
+        avatarEl.textContent = (user.name || user.email || "?")[0].toUpperCase();
+      }
+      document.getElementById("user-name").textContent = user.name || user.email || "";
+
+      // Show portal
+      document.getElementById("login-screen").style.display = "none";
+      document.getElementById("portal-screen").classList.add("active");
+
+      buildFilters();
+      renderProducts();
+    }
+
+    function buildFilters() {
+      const cats = [...new Set(allProducts.map((p) => p.category).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+
+      const filtersEl = document.getElementById("filters");
+      filtersEl.innerHTML = [
+        `<button class="filter-btn${activeCategory === "all" ? " active" : ""}" data-cat="all" type="button">${t.all}</button>`,
+        ...cats.map((cat) =>
+          `<button class="filter-btn${cat === activeCategory ? " active" : ""}" data-cat="${escAttr(cat)}" type="button">${escHtml(cat)}</button>`
+        )
+      ].join("");
+
+      filtersEl.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          activeCategory = btn.dataset.cat;
+          filtersEl.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          renderProducts();
+        });
+      });
+    }
+
+    function renderProducts() {
+      const query = document.getElementById("search-input").value.toLowerCase();
+      const filtered = allProducts.filter((p) => {
+        const matchCat = activeCategory === "all" || p.category === activeCategory;
+        const matchSearch = !query || p.name.toLowerCase().includes(query) || (p.category || "").toLowerCase().includes(query);
+        return matchCat && matchSearch;
+      });
+
+      document.getElementById("count-display").textContent = filtered.length;
+
+      const grid = document.getElementById("products-grid");
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="empty-state"><p>${t.emptyCategory}</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((p) => {
+        const color = CATEGORY_COLORS[p.category] || "#71717a";
+        const img = p.imageUrl
+          ? `<img src="${p.imageUrl}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=product-img-placeholder>📦</div>'">`
+          : `<div class="product-img-placeholder">📦</div>`;
+        return `<div class="product-card" data-id="${p.id}">
+          <div class="product-img">
+            ${img}
+            <span class="cat-badge" style="background:${color}">${escHtml(p.category || "Otros")}</span>
+          </div>
+          <div class="product-info">
+            <div class="product-name">${escHtml(p.name)}</div>
+          </div>
+        </div>`;
+      }).join("");
+
+      grid.querySelectorAll(".product-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          const product = filtered.find((p) => p.id === card.dataset.id);
+          if (product) openModal(product);
+        });
+      });
+    }
+
+    function openModal(product) {
+      const color = CATEGORY_COLORS[product.category] || "#71717a";
+      const img = document.getElementById("modal-img");
+      if (product.imageUrl) {
+        img.src = product.imageUrl;
+        img.classList.add("visible");
+      } else {
+        img.classList.remove("visible");
+      }
+      document.getElementById("modal-cat").textContent = product.category || "";
+      document.getElementById("modal-cat").style.color = color;
+      document.getElementById("modal-name").textContent = product.name;
+      document.getElementById("modal-desc").textContent = product.description || "";
+      document.getElementById("modal-download").href = product.downloadUrl;
+      document.getElementById("modal-overlay").classList.add("active");
+    }
+
+    document.getElementById("modal-close").addEventListener("click", () => {
+      document.getElementById("modal-overlay").classList.remove("active");
+    });
+    document.getElementById("modal-overlay").addEventListener("click", (e) => {
+      if (e.target === document.getElementById("modal-overlay"))
+        document.getElementById("modal-overlay").classList.remove("active");
+    });
+
+    document.getElementById("search-input").addEventListener("input", renderProducts);
+
+    function detectLang() {
+      const fromUrl = cleanLang(urlParams.get("lang"));
+      if (fromUrl) {
+        localStorage.setItem("site_lang", fromUrl);
+        return fromUrl;
+      }
+      const stored = cleanLang(localStorage.getItem("site_lang"));
+      if (stored) return stored;
+      const br = (navigator.language || "en").toLowerCase();
+      if (br.startsWith("ar")) return "ar";
+      if (br.startsWith("pt")) return "pt";
+      if (br.startsWith("es")) return "es";
+      return "ar";
+    }
+
+    function cleanLang(value) {
+      return ["en", "es", "pt", "ar"].includes(value) ? value : "";
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+      document.title = `${t.title} — Digital Products Pack`;
+      document.getElementById("login-sub").textContent = t.loginSub;
+      document.getElementById("google-btn-text").textContent = t.googleBtn;
+      document.getElementById("google-btn").href = `/auth/google?lang=${encodeURIComponent(lang)}&return=${encodeURIComponent("/portal.html")}`;
+      document.getElementById("divider-text").textContent = t.divider;
+      document.getElementById("email-label").textContent = t.emailLabel;
+      document.getElementById("order-label").textContent = t.orderLabel;
+      document.getElementById("order-access-btn").textContent = t.accessBtn;
+      document.getElementById("brand-products").textContent = t.brandProducts;
+      document.getElementById("logout-link").textContent = t.logout;
+      document.getElementById("portal-title").textContent = t.portalTitle;
+      document.getElementById("count-prefix").textContent = t.countPrefix;
+      document.getElementById("count-suffix").textContent = t.countSuffix;
+      document.getElementById("search-input").placeholder = t.search;
+      document.getElementById("download-text").textContent = "⬇ " + t.download;
+      document.getElementById("modal-close").textContent = t.close;
+    }
+
+    function escHtml(str) {
+      return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    function escAttr(str) {
+      return escHtml(str).replace(/'/g,"&#39;");
+    }
+
+    function showError(msg) {
+      const el = document.getElementById("error-msg");
+      el.textContent = msg;
+      el.classList.add("visible");
+    }
+
+    init();
+  </script>
+</body>
+</html>

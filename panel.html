@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-P6X6DZCH');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Mis Productos — Raqmiy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#06130f;--panel:#0b1d18;--card:#102a23;--line:rgba(255,255,255,.09);--text:#f8fafc;--muted:#71717a;--gold:#d4af37;--green:#22c55e;--radius:10px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Cairo,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+    /* ── HEADER ── */
+    .site-header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid var(--line);background:rgba(10,10,10,.95);position:sticky;top:0;z-index:40;backdrop-filter:blur(12px)}
+    .logo{font-weight:900;font-size:1rem;color:var(--gold);text-decoration:none}
+    .user-area{display:flex;align-items:center;gap:10px}
+    .user-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)}
+    .user-name{font-size:.85rem;font-weight:700;color:var(--text)}
+    .btn-login{padding:8px 16px;background:var(--gold);color:#111;border:0;border-radius:6px;font-weight:900;font-size:.85rem;cursor:pointer;font:inherit}
+    .btn-logout{padding:7px 14px;border:1px solid var(--line);color:var(--muted);background:transparent;border-radius:6px;font-weight:700;font-size:.82rem;cursor:pointer;font:inherit}
+
+    /* ── MAIN ── */
+    .main{width:min(1200px,calc(100% - 32px));margin:0 auto;padding:32px 0 80px}
+    .page-title{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;margin-bottom:6px}
+    .page-sub{color:var(--muted);font-size:.95rem;margin-bottom:28px}
+
+    /* ── LOCKED BANNER ── */
+    .locked-banner{display:none;background:linear-gradient(135deg,rgba(212,175,55,.12),rgba(249,115,22,.08));border:1px solid rgba(212,175,55,.3);border-radius:10px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .locked-banner.hidden{display:none!important}
+    .locked-text{font-size:.92rem;color:#f6e7b0;font-weight:600}
+    .btn-buy{padding:10px 20px;background:linear-gradient(180deg,#f6e7b0,#d4af37 54%,#b8860b);color:#111;border:0;border-radius:7px;font-weight:900;font-size:.88rem;cursor:pointer;font:inherit;text-decoration:none;display:inline-block}
+
+    /* ── TOOLBAR ── */
+    .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+    .search-box{flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.04);color:var(--text);font:inherit;font-size:.9rem}
+    .search-box::placeholder{color:var(--muted)}
+    .filter-pills{display:flex;gap:6px;flex-wrap:wrap}
+    .pill{padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:.82rem;font-weight:700;cursor:pointer;transition:.15s}
+    .pill.active{color:#111;border-color:transparent}
+    .pill:hover:not(.active){background:rgba(255,255,255,.06)}
+
+    /* ── PRODUCT GRID ── */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+    .prod-card{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);overflow:hidden;cursor:pointer;transition:transform .15s,border-color .15s;display:flex;flex-direction:column}
+    .prod-card:hover{transform:translateY(-3px);border-color:rgba(212,175,55,.35)}
+    .prod-thumb{width:100%;aspect-ratio:4/3;object-fit:cover;background:#111;display:block}
+    .prod-thumb-ph{width:100%;aspect-ratio:4/3;background:#111;display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:rgba(255,255,255,.15)}
+    .prod-body{padding:10px 12px 14px;flex:1;display:flex;flex-direction:column;gap:6px}
+    .cat-badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.72rem;font-weight:800;width:fit-content}
+    .prod-name{font-weight:800;font-size:.9rem;line-height:1.35}
+    .prod-desc{font-size:.78rem;color:var(--muted);line-height:1.4;flex:1}
+    .lock-icon{margin-top:auto;display:flex;align-items:center;gap:5px;font-size:.75rem;color:var(--muted);padding-top:6px}
+
+    /* ── EMPTY ── */
+    .empty{text-align:center;padding:80px 20px;color:var(--muted)}
+    .empty-icon{font-size:3rem;margin-bottom:12px;opacity:.4}
+
+    /* ── MODAL OVERLAY ── */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+    .overlay.open{display:flex}
+    .modal{background:#102a23;border:1px solid rgba(255,255,255,.12);border-radius:14px;width:min(500px,100%);max-height:90vh;overflow-y:auto;padding:28px}
+    .modal-close{float:right;background:none;border:0;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1;margin-top:-4px}
+    .modal-img{width:100%;border-radius:8px;aspect-ratio:16/9;object-fit:cover;background:#111;margin-bottom:16px;display:block}
+    .modal-img-ph{width:100%;aspect-ratio:16/9;background:#111;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:16px}
+    .modal-cat{margin-bottom:8px}
+    .modal-title{font-size:1.3rem;font-weight:900;margin-bottom:8px}
+    .modal-desc{color:var(--muted);font-size:.9rem;line-height:1.6;margin-bottom:20px}
+    .btn-download{display:block;width:100%;padding:14px;background:linear-gradient(180deg,#f6e7b0,#d4af37 54%,#b8860b);color:#111;border:0;border-radius:8px;font-weight:900;font-size:1rem;cursor:pointer;font:inherit;text-align:center;text-decoration:none}
+    .locked-cta{background:rgba(212,175,55,.07);border:1px dashed rgba(212,175,55,.3);border-radius:10px;padding:20px;text-align:center}
+    .locked-cta p{color:#f6e7b0;font-weight:700;margin-bottom:14px;font-size:.95rem}
+
+    /* ── LOGIN MODAL ── */
+    .login-modal{background:#102a23;border:1px solid rgba(255,255,255,.12);border-radius:14px;width:min(420px,100%);padding:32px}
+    .login-modal h2{font-size:1.4rem;font-weight:900;margin-bottom:6px}
+    .login-modal p{color:var(--muted);font-size:.9rem;margin-bottom:24px}
+    .divider{display:flex;align-items:center;gap:10px;margin:20px 0;color:var(--muted);font-size:.82rem}
+    .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+    label{display:grid;gap:6px;font-size:.85rem;font-weight:700;color:#d4d4d8;margin-bottom:12px}
+    input{padding:11px 14px;border:1px solid var(--line);border-radius:7px;background:rgba(255,255,255,.04);color:var(--text);font:inherit;font-size:.9rem;width:100%}
+    .btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;border:1px solid rgba(255,255,255,.18);border-radius:8px;background:rgba(255,255,255,.06);color:var(--text);font:inherit;font-weight:700;font-size:.92rem;cursor:pointer}
+    .btn-google:hover{background:rgba(255,255,255,.1)}
+    .btn-verify{width:100%;padding:12px;background:var(--gold);color:#111;border:0;border-radius:8px;font:inherit;font-weight:900;font-size:.92rem;cursor:pointer;margin-top:4px}
+    .form-status{margin-top:10px;padding:10px 12px;border-radius:6px;font-size:.85rem;display:none}
+    .form-status.ok{display:block;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#86efac}
+    .form-status.bad{display:block;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
+
+    @media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr)}.toolbar{flex-direction:column;align-items:stretch}.search-box{width:100%}}
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P6X6DZCH"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <a href="./index.html" class="logo">Volver a la página de inicio</a>
+    <div class="user-area" id="user-area">
+      <button class="btn-login" id="header-login-btn" type="button"></button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <div class="main">
+    <h1 class="page-title" id="page-title"></h1>
+    <p class="page-sub" id="page-sub"></p>
+
+    <!-- Locked banner (shown when not a buyer) -->
+    <div class="locked-banner hidden" id="locked-banner">
+      <span class="locked-text" id="locked-text"></span>
+      <a href="./index.html" class="btn-buy" id="locked-buy-btn"></a>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <input class="search-box" id="search" type="text" placeholder="">
+      <div class="filter-pills" id="filter-pills"></div>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid" id="prod-grid">
+      <div class="empty"><div class="empty-icon">📦</div><p id="loading-text"></p></div>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAIL MODAL -->
+  <div class="overlay" id="detail-overlay">
+    <div class="modal">
+      <button class="modal-close" id="detail-close" type="button">×</button>
+      <div id="detail-img-wrap"></div>
+      <div class="modal-cat" id="detail-cat"></div>
+      <h2 class="modal-title" id="detail-title"></h2>
+      <p class="modal-desc" id="detail-desc"></p>
+      <div id="detail-action"></div>
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div class="overlay" id="login-overlay">
+    <div class="login-modal">
+      <button class="modal-close" id="login-close" type="button" style="float:right">×</button>
+      <h2 id="login-title"></h2>
+      <p id="login-sub"></p>
+      <button class="btn-google" id="google-btn" type="button">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.2l6.7-6.7C35.7 2.5 30.2 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.8 6C12.3 13 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.9 7.2l7.6 5.9C43.8 37.5 46.5 31.4 46.5 24.5z"/><path fill="#FBBC05" d="M10.5 28.7A14.6 14.6 0 0 1 9.5 24c0-1.7.3-3.3.8-4.8l-7.8-6A23.9 23.9 0 0 0 0 24c0 3.9.9 7.5 2.7 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.6-5.9c-2 1.4-4.7 2.2-7.6 2.2-6.3 0-11.7-4.3-13.6-10l-7.8 6C6.6 42.6 14.6 48 24 48z"/></svg>
+        <span id="google-btn-text"></span>
+      </button>
+      <div class="divider" id="login-divider"></div>
+      <label id="label-email"><span id="label-email-text"></span><input id="order-email" type="email" autocomplete="email"></label>
+      <label id="label-order"><span id="label-order-text"></span><input id="order-id" type="text" placeholder="DP-20250501-0001"></label>
+      <button class="btn-verify" id="verify-btn" type="button"></button>
+      <div class="form-status" id="verify-status"></div>
+    </div>
+  </div>
+
+  <script>
+    // ─── i18n ───────────────────────────────────────────────────────────────
+    const T = {
+      en: {
+        title: "Product Library",
+        sub: "Browse all products. Purchase to unlock downloads.",
+        lockedBanner: "🔒 You have not purchased yet. See the products — buy to download.",
+        buyBtn: "Buy Now",
+        searchPlaceholder: "Search products…",
+        allCats: "All",
+        loadingText: "Loading products…",
+        emptyText: "No products yet.",
+        download: "⬇ Download",
+        lockedTitle: "🔒 Purchase Required",
+        lockedMsg: "Buy the bundle to unlock all downloads.",
+        loginTitle: "Access my products",
+        loginSub: "Sign in to download your purchased products.",
+        googleBtn: "Continue with Google",
+        or: "or enter your order",
+        labelEmail: "Purchase email",
+        labelOrder: "Order number",
+        verifyBtn: "Verify access",
+        verifyOk: "✓ Access granted!",
+        verifyBad: "Order not found. Check your email and order number.",
+        errors: {
+          auth_failed: "Could not authenticate with Google.",
+          auth_not_configured: "Google login is not configured yet.",
+          google_invalid_client: "Google Client ID and Client Secret do not match. Check Cloudflare variables.",
+          google_redirect_mismatch: "Google redirect URL is not authorized. Add https://digital.raqmiy.com/auth/callback in Google Cloud.",
+          google_invalid_grant: "Google login expired. Try again.",
+          invalid_state: "Security error. Try again.",
+          no_email: "Could not get the Google email.",
+          cancelled: "Sign-in cancelled.",
+        },
+        loggedInAs: "Logged in as",
+        logout: "Logout",
+        loginBtn: "Sign in",
+      },
+      es: {
+        title: "Biblioteca de productos",
+        sub: "Explora todos los productos. Compra para desbloquear descargas.",
+        lockedBanner: "🔒 Aún no has comprado. Explora los productos — compra para descargar.",
+        buyBtn: "Comprar ahora",
+        searchPlaceholder: "Buscar productos…",
+        allCats: "Todos",
+        loadingText: "Cargando productos…",
+        emptyText: "No hay productos todavía.",
+        download: "⬇ Descargar",
+        lockedTitle: "🔒 Compra necesaria",
+        lockedMsg: "Compra el bundle para desbloquear todas las descargas.",
+        loginTitle: "Acceder a mis productos",
+        loginSub: "Inicia sesión para descargar tus productos.",
+        googleBtn: "Continuar con Google",
+        or: "o introduce tu pedido",
+        labelEmail: "Email de compra",
+        labelOrder: "Número de pedido",
+        verifyBtn: "Verificar acceso",
+        verifyOk: "✓ ¡Acceso concedido!",
+        verifyBad: "Pedido no encontrado. Revisa tu email y número de pedido.",
+        errors: {
+          auth_failed: "No se pudo autenticar con Google.",
+          auth_not_configured: "Google no está configurado todavía.",
+          google_invalid_client: "El Client ID y el Client Secret de Google no coinciden. Revisa las variables de Cloudflare.",
+          google_redirect_mismatch: "La URL de redirección no está autorizada. Añade https://digital.raqmiy.com/auth/callback en Google Cloud.",
+          google_invalid_grant: "El login de Google ha caducado. Inténtalo otra vez.",
+          invalid_state: "Error de seguridad. Intenta de nuevo.",
+          no_email: "No se pudo obtener el email de Google.",
+          cancelled: "Inicio de sesión cancelado.",
+        },
+        loggedInAs: "Conectado como",
+        logout: "Cerrar sesión",
+        loginBtn: "Iniciar sesión",
+      },
+      pt: {
+        title: "Biblioteca de produtos",
+        sub: "Explore todos os produtos. Compre para desbloquear downloads.",
+        lockedBanner: "🔒 Você ainda não comprou. Veja os produtos — compre para baixar.",
+        buyBtn: "Comprar agora",
+        searchPlaceholder: "Pesquisar produtos…",
+        allCats: "Todos",
+        loadingText: "Carregando produtos…",
+        emptyText: "Sem produtos ainda.",
+        download: "⬇ Baixar",
+        lockedTitle: "🔒 Compra necessária",
+        lockedMsg: "Compre o bundle para desbloquear todos os downloads.",
+        loginTitle: "Acessar meus produtos",
+        loginSub: "Entre para baixar seus produtos comprados.",
+        googleBtn: "Continuar com Google",
+        or: "ou insira seu pedido",
+        labelEmail: "Email de compra",
+        labelOrder: "Número do pedido",
+        verifyBtn: "Verificar acesso",
+        verifyOk: "✓ Acesso concedido!",
+        verifyBad: "Pedido não encontrado. Verifique seu email e número do pedido.",
+        errors: {
+          auth_failed: "Não foi possível autenticar com Google.",
+          auth_not_configured: "O login com Google ainda não está configurado.",
+          google_invalid_client: "O Client ID e o Client Secret do Google não correspondem. Verifique as variáveis no Cloudflare.",
+          google_redirect_mismatch: "A URL de redirecionamento não está autorizada. Adicione https://digital.raqmiy.com/auth/callback no Google Cloud.",
+          google_invalid_grant: "O login do Google expirou. Tente novamente.",
+          invalid_state: "Erro de segurança. Tente novamente.",
+          no_email: "Não foi possível obter o email do Google.",
+          cancelled: "Login cancelado.",
+        },
+        loggedInAs: "Conectado como",
+        logout: "Sair",
+        loginBtn: "Entrar",
+      },
+      ar: {
+        title: "Biblioteca de productos",
+        sub: "Explorar todos los productos. Compra para desbloquear descargas.",
+        lockedBanner: "🔒 Aún no he comprado. Explorar productos — Comprar para descargar.",
+        buyBtn: "Compre ya",
+        searchPlaceholder: "Buscar productos…",
+        allCats: "todos",
+        loadingText: "Cargando productos…",
+        emptyText: "Aún no hay productos.",
+        download: "⬇ descargar",
+        lockedTitle: "🔒 Compra requerida",
+        lockedMsg: "Compra el paquete para desbloquear todas las descargas.",
+        loginTitle: "Acceso a mis productos",
+        loginSub: "Inicia sesión para descargar tus productos.",
+        googleBtn: "Seguimiento con Google",
+        or: "O introduce tu número de pedido",
+        labelEmail: "Correo de compra",
+        labelOrder: "número de orden",
+        verifyBtn: "Verificación de acceso",
+        verifyOk: "✓ Acceso concedido!",
+        verifyBad: "La solicitud no existe. Consulta tu correo y número de pedido.",
+        errors: {
+          auth_failed: "No se puede iniciar sesión a través de Google.",
+          auth_not_configured: "Iniciar sesión a través de Google Aún no configurado.",
+          google_invalid_client: "ID de cliente y secreto de cliente en Google no coinciden. Verificar variables Cloudflare.",
+          google_redirect_mismatch: "El enlace de redireccionamiento no está autorizado.. Agregar https://digital.raqmiy.com/auth/callback en Google Cloud.",
+          google_invalid_grant: "Su inicio de sesión ha caducado Google. Intentar otra vez.",
+          invalid_state: "error de seguridad. Intentar otra vez.",
+          no_email: "No se puede recibir correo Google.",
+          cancelled: "Su inicio de sesión ha sido cancelado.",
+        },
+        loggedInAs: "Inicia sesión con",
+        logout: "Finalizar la sesión",
+        loginBtn: "Acceso",
+      }
+    };
+
+    const CATEGORY_COLORS = {
+      "Canva Templates": "#8b5cf6",
+      "Design":          "#3b82f6",
+      "Ebook":           "#0f8a5f",
+      "Video":           "#ef4444",
+      "Audio":           "#ec4899",
+      "Software":        "#06b6d4",
+      "Social Media":    "#10b981",
+      "Marketing":       "#b8860b",
+      "Otros":           "#6b7280",
+      "Other":           "#6b7280"
+    };
+
+    // ─── Language detection ──────────────────────────────────────────────────
+    function detectLang() {
+      const stored = localStorage.getItem("site_lang");
+      if (stored && T[stored]) return stored;
+      const br = (navigator.language || "en").toLowerCase();
+      if (br.startsWith("ar")) return "ar";
+      if (br.startsWith("pt")) return "pt";
+      if (br.startsWith("es")) return "es";
+      return "ar";
+    }
+
+    const lang = detectLang();
+    const t = T[lang];
+
+    // RTL for Arabic
+    if (lang === "ar") {
+      document.documentElement.lang = "ar";
+      document.documentElement.dir = "rtl";
+    } else {
+      document.documentElement.lang = lang;
+    }
+
+    // ─── Apply static i18n ───────────────────────────────────────────────────
+    document.getElementById("page-title").textContent    = t.title;
+    document.getElementById("page-sub").textContent      = t.sub;
+    document.getElementById("locked-text").textContent   = t.lockedBanner;
+    document.getElementById("locked-buy-btn").textContent= t.buyBtn;
+    document.getElementById("search").placeholder        = t.searchPlaceholder;
+    document.getElementById("loading-text").textContent  = t.loadingText;
+    document.getElementById("header-login-btn").textContent = t.loginBtn;
+    document.getElementById("login-title").textContent   = t.loginTitle;
+    document.getElementById("login-sub").textContent     = t.loginSub;
+    document.getElementById("google-btn-text").textContent = t.googleBtn;
+    document.getElementById("login-divider").textContent = t.or;
+    document.getElementById("label-email-text").textContent = t.labelEmail;
+    document.getElementById("label-order-text").textContent = t.labelOrder;
+    document.getElementById("verify-btn").textContent    = t.verifyBtn;
+    document.title = t.title + " — Raqmiy";
+
+    // ─── State ──────────────────────────────────────────────────────────────
+    let allProducts  = [];
+    let currentUser  = null;
+    let isPurchaser  = false;
+    let activeFilter = "all";
+    let openProduct  = null;
+
+    // ─── Load products + auth state ─────────────────────────────────────────
+    async function loadPanel() {
+      try {
+        const headers = {};
+        const cachedEmail = sessionStorage.getItem("digital_order_email");
+        const cachedOrder = sessionStorage.getItem("digital_order_id");
+        if (cachedEmail && cachedOrder) {
+          headers["x-order-email"] = cachedEmail;
+          headers["x-order-id"]    = cachedOrder;
+        }
+        const res  = await fetch("/api/portal-products", { headers, cache: "no-store" });
+        const data = await res.json();
+        allProducts = data.products || [];
+        currentUser = data.user || null;
+        isPurchaser = data.isPurchaser || false;
+        renderHeader();
+        renderLockedBanner();
+        renderFilters();
+        renderGrid(allProducts);
+      } catch (e) {
+        document.getElementById("prod-grid").innerHTML =
+          `<div class="empty"><div class="empty-icon">⚠️</div><p>${e.message}</p></div>`;
+      }
+    }
+
+    // ─── Header ─────────────────────────────────────────────────────────────
+    function renderHeader() {
+      const area = document.getElementById("user-area");
+      if (currentUser) {
+        const nameStr = currentUser.name || currentUser.email || "";
+        const picHTML = currentUser.picture
+          ? `<img class="user-avatar" src="${esc(currentUser.picture)}" alt="">`
+          : `<div style="width:34px;height:34px;border-radius:50%;background:rgba(212,175,55,.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem">👤</div>`;
+        area.innerHTML = `
+          ${picHTML}
+          <span class="user-name" style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(nameStr)}</span>
+          <button class="btn-logout" id="logout-btn" type="button">${t.logout}</button>`;
+        document.getElementById("logout-btn").addEventListener("click", doLogout);
+      } else {
+        area.innerHTML = `<button class="btn-login" id="header-login-btn" type="button">${t.loginBtn}</button>`;
+        document.getElementById("header-login-btn").addEventListener("click", openLoginModal);
+      }
+    }
+
+    // ─── Locked banner ───────────────────────────────────────────────────────
+    function renderLockedBanner() {
+      const banner = document.getElementById("locked-banner");
+      if (!isPurchaser) {
+        banner.classList.remove("hidden");
+      } else {
+        banner.classList.add("hidden");
+      }
+    }
+
+    // ─── Category filters ────────────────────────────────────────────────────
+    function renderFilters() {
+      const cats = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
+      const container = document.getElementById("filter-pills");
+      const all = document.createElement("button");
+      all.className = "pill active";
+      all.textContent = t.allCats;
+      all.dataset.cat = "all";
+      all.style.background = "linear-gradient(180deg,#f6e7b0,#d4af37 54%,#b8860b)";
+      all.style.color = "#111";
+      all.style.borderColor = "transparent";
+      all.addEventListener("click", () => setFilter("all"));
+      container.appendChild(all);
+
+      cats.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = "pill";
+        btn.textContent = cat;
+        btn.dataset.cat = cat;
+        btn.addEventListener("click", () => setFilter(cat));
+        container.appendChild(btn);
+      });
+    }
+
+    function setFilter(cat) {
+      activeFilter = cat;
+      document.querySelectorAll(".pill").forEach(p => {
+        const isActive = p.dataset.cat === cat;
+        p.classList.toggle("active", isActive);
+        if (isActive) {
+          const color = cat === "all" ? "#d4af37" : (CATEGORY_COLORS[cat] || "#d4af37");
+          p.style.background = cat === "all"
+            ? "linear-gradient(180deg,#f6e7b0,#d4af37 54%,#b8860b)"
+            : color;
+          p.style.color = "#111";
+          p.style.borderColor = "transparent";
+        } else {
+          p.style.background = "";
+          p.style.color = "";
+          p.style.borderColor = "";
+        }
+      });
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const q = document.getElementById("search").value.toLowerCase();
+      let filtered = allProducts;
+      if (activeFilter !== "all") filtered = filtered.filter(p => p.category === activeFilter);
+      if (q) filtered = filtered.filter(p =>
+        (p.name || "").toLowerCase().includes(q) || (p.description || "").toLowerCase().includes(q)
+      );
+      renderGrid(filtered);
+    }
+
+    // ─── Product grid ────────────────────────────────────────────────────────
+    function renderGrid(products) {
+      const grid = document.getElementById("prod-grid");
+      if (!products.length) {
+        grid.innerHTML = `<div class="empty"><div class="empty-icon">📦</div><p>${t.emptyText}</p></div>`;
+        return;
+      }
+      grid.innerHTML = "";
+      products.forEach(p => {
+        const color = CATEGORY_COLORS[p.category] || "#6b7280";
+        const card = document.createElement("div");
+        card.className = "prod-card";
+        card.innerHTML = `
+          ${p.imageUrl
+            ? `<img class="prod-thumb" src="${esc(p.imageUrl)}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+            : ""}
+          <div class="prod-thumb-ph" style="${p.imageUrl ? "display:none" : ""}">📦</div>
+          <div class="prod-body">
+            <span class="cat-badge" style="background:${color}22;color:${color};border:1px solid ${color}44">${esc(p.category || "")}</span>
+            <div class="prod-name">${esc(p.name)}</div>
+            ${p.description ? `<div class="prod-desc">${esc(p.description.slice(0,80))}${p.description.length>80?"…":""}</div>` : ""}
+            <div class="lock-icon">${isPurchaser ? "✓" : "🔒"}</div>
+          </div>`;
+        card.addEventListener("click", () => openDetail(p));
+        grid.appendChild(card);
+      });
+    }
+
+    // ─── Detail modal ────────────────────────────────────────────────────────
+    function openDetail(p) {
+      openProduct = p;
+      const color = CATEGORY_COLORS[p.category] || "#6b7280";
+      document.getElementById("detail-img-wrap").innerHTML = p.imageUrl
+        ? `<img class="modal-img" src="${esc(p.imageUrl)}" alt="" onerror="this.style.display='none'">`
+        : `<div class="modal-img-ph">📦</div>`;
+      document.getElementById("detail-cat").innerHTML =
+        `<span class="cat-badge" style="background:${color}22;color:${color};border:1px solid ${color}44">${esc(p.category||"")}</span>`;
+      document.getElementById("detail-title").textContent = p.name;
+      document.getElementById("detail-desc").textContent  = p.description || "";
+
+      const actionEl = document.getElementById("detail-action");
+      if (isPurchaser && p.downloadUrl) {
+        actionEl.innerHTML = `<a class="btn-download" href="${esc(p.downloadUrl)}" target="_blank" rel="noopener">${t.download}</a>`;
+      } else if (isPurchaser) {
+        actionEl.innerHTML = `<div class="locked-cta"><p style="color:var(--muted)">No download link added yet.</p></div>`;
+      } else {
+        actionEl.innerHTML = `
+          <div class="locked-cta">
+            <p>${t.lockedMsg}</p>
+            <a href="./index.html" class="btn-buy">${t.buyBtn}</a>
+          </div>`;
+      }
+      document.getElementById("detail-overlay").classList.add("open");
+    }
+
+    // ─── Login modal ─────────────────────────────────────────────────────────
+    function openLoginModal() {
+      document.getElementById("login-overlay").classList.add("open");
+    }
+
+    // ─── Verify order ────────────────────────────────────────────────────────
+    async function verifyOrder() {
+      const email = document.getElementById("order-email").value.trim().toLowerCase();
+      const id    = document.getElementById("order-id").value.trim();
+      const status= document.getElementById("verify-status");
+      if (!email || !id) { setStatus(status, t.verifyBad, "bad"); return; }
+
+      document.getElementById("verify-btn").disabled = true;
+      document.getElementById("verify-btn").textContent = "…";
+      try {
+        const res  = await fetch("/api/portal-products", {
+          headers: { "x-order-email": email, "x-order-id": id },
+          cache: "no-store"
+        });
+        const data = await res.json();
+        if (data.isPurchaser) {
+          sessionStorage.setItem("digital_order_email", email);
+          sessionStorage.setItem("digital_order_id", id);
+          setStatus(status, t.verifyOk, "ok");
+          setTimeout(() => {
+            document.getElementById("login-overlay").classList.remove("open");
+            allProducts = data.products || [];
+            currentUser = data.user;
+            isPurchaser = true;
+            renderHeader();
+            renderLockedBanner();
+            renderGrid(allProducts);
+          }, 800);
+        } else {
+          setStatus(status, t.verifyBad, "bad");
+        }
+      } catch (e) {
+        setStatus(status, t.verifyBad, "bad");
+      } finally {
+        document.getElementById("verify-btn").disabled = false;
+        document.getElementById("verify-btn").textContent = t.verifyBtn;
+      }
+    }
+
+    function setStatus(el, msg, type) {
+      el.className = "form-status " + type;
+      el.textContent = msg;
+    }
+
+    // ─── Logout ──────────────────────────────────────────────────────────────
+    async function doLogout() {
+      sessionStorage.removeItem("digital_order_email");
+      sessionStorage.removeItem("digital_order_id");
+      if (currentUser && currentUser.name) {
+        window.location.href = "/auth/logout";
+      } else {
+        currentUser = null;
+        isPurchaser = false;
+        renderHeader();
+        renderLockedBanner();
+        renderGrid(allProducts.map(({ downloadUrl, ...p }) => p));
+      }
+    }
+
+    // ─── Events ──────────────────────────────────────────────────────────────
+    document.getElementById("header-login-btn").addEventListener("click", openLoginModal);
+    document.getElementById("detail-close").addEventListener("click", () =>
+      document.getElementById("detail-overlay").classList.remove("open"));
+    document.getElementById("login-close").addEventListener("click", () =>
+      document.getElementById("login-overlay").classList.remove("open"));
+    document.getElementById("detail-overlay").addEventListener("click", e => {
+      if (e.target === document.getElementById("detail-overlay"))
+        document.getElementById("detail-overlay").classList.remove("open");
+    });
+    document.getElementById("login-overlay").addEventListener("click", e => {
+      if (e.target === document.getElementById("login-overlay"))
+        document.getElementById("login-overlay").classList.remove("open");
+    });
+    document.getElementById("google-btn").addEventListener("click", () => {
+      window.location.href = `/auth/google?lang=${encodeURIComponent(lang)}&return=${encodeURIComponent("/panel.html")}`;
+    });
+    document.getElementById("verify-btn").addEventListener("click", verifyOrder);
+    document.getElementById("order-id").addEventListener("keydown", e => {
+      if (e.key === "Enter") verifyOrder();
+    });
+    document.getElementById("search").addEventListener("input", applyFilters);
+
+    // ─── Helpers ─────────────────────────────────────────────────────────────
+    function esc(s) {
+      return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    // ─── Init ────────────────────────────────────────────────────────────────
+    const authError = new URLSearchParams(location.search).get("error");
+    if (authError) {
+      setStatus(document.getElementById("verify-status"), t.errors?.[authError] || t.verifyBad, "bad");
+      openLoginModal();
+    }
+
+    loadPanel();
+  </script>
+</body>
+</html>

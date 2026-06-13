@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-P6X6DZCH');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الشروط - Digital Products Pack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;font-family:"Cairo",Arial,sans-serif;background:#06130f;color:#f8fafc;line-height:1.8}
+    main{width:min(900px,calc(100% - 32px));margin:0 auto;padding:52px 0}
+    a{color:#d4af37} h1,h2{line-height:1.25} h1{font-size:2.4rem}.box{border:1px solid rgba(255,255,255,.12);border-radius:8px;background:rgba(255,255,255,.045);padding:22px;margin:18px 0}.muted{color:#a1a1aa}
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P6X6DZCH"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <main>
+    <p><a href="./index.html">العودة إلى الصفحة الرئيسية</a></p>
+    <h1>شروط الخدمة</h1>
+    <p class="muted">آخر تحديث: 30 أبريل 2026</p>
+    <div class="box">
+      <p>بشراء حزمة Digital Products Pack فإنك توافق على استخدام الملفات حسب شروط الترخيص المرفقة مع المنتج. يتم تسليم المنتجات الرقمية إلكترونيا بعد تأكيد الدفع.</p>
+      <p>أنت مسؤول عن مراجعة وتعديل ووضع علامتك على المحتوى قبل إعادة بيعه أو نشره. لا نضمن دخلا أو مبيعات أو نتائج تجارية محددة.</p>
+      <p>لا يجوز استخدام المنتج في أي نشاط غير قانوني أو مضلل أو منتهك للحقوق. قد تتغير الأسعار والمكافآت والتوفر.</p>
+      <p>للدعم: <strong>support@example.com</strong></p>
+    </div>
+  </main>
+  <script>
+    fetch("/api/config", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(c => {
+      if (c?.supportEmail) document.body.innerHTML = document.body.innerHTML.replaceAll("support@example.com", c.supportEmail);
+    }).catch(() => {});
+  </script>
+</body>
+</html>

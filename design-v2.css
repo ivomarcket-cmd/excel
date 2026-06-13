@@ -1,0 +1,1116 @@
+/* ═══════════════════════════════════════════════════════════
+   DESIGN V2 — Digital Products Pack   (override layer)
+   Loaded AFTER catalog-sections.css so specificity wins cleanly.
+   Zero JS changes. Zero HTML structure changes.
+═══════════════════════════════════════════════════════════ */
+
+/* ─── 1. GLOBAL TOKENS ─────────────────────────────────── */
+:root {
+  --bg:        #061417;
+  --panel:     #0b2430;
+  --gold:      #d6a84f;
+  --gold-2:    #a97822;
+  --gold-soft: rgba(214,168,79,0.11);
+  --gold-glow: rgba(214,168,79,0.20);
+  --text:      #f4f1ea;
+  --muted:     #98a6a4;
+  --line:      rgba(255,255,255,0.085);
+  --success:   #34d399;
+  --radius:    10px;
+  --shadow:    0 40px 100px rgba(0,0,0,0.72);
+}
+
+/* ─── 2. BACKGROUND ────────────────────────────────────── */
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Grain texture overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+body::before {
+  background:
+    radial-gradient(ellipse 90% 55% at 72% -8%, rgba(232,185,62,0.15), transparent 52%),
+    radial-gradient(ellipse 65% 45% at 8%  95%, rgba(30,80,220,0.08),  transparent 50%),
+    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(12,12,40,0.6),    transparent 80%),
+    linear-gradient(180deg, #05050d 0%, #07071a 100%);
+}
+
+/* ─── 3. URGENCY BAR ───────────────────────────────────── */
+.urgency-bar {
+  background: linear-gradient(90deg, #04040c 0%, #0a0a20 50%, #04040c 100%);
+  border-bottom-color: rgba(232,185,62,0.28);
+}
+
+.urgency-inner { font-size: 0.86rem; }
+
+.timer { color: var(--gold); letter-spacing: 0.04em; }
+
+/* ─── 4. EYEBROW BADGE ─────────────────────────────────── */
+.eyebrow {
+  border-color: rgba(232,185,62,0.32);
+  background: rgba(232,185,62,0.06);
+  color: #f0d98a;
+  letter-spacing: 0.05em;
+  font-size: 0.78rem;
+}
+
+@keyframes pulse-live {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(45,216,126,0.14); }
+  50%       { box-shadow: 0 0 0 8px rgba(45,216,126,0.04); }
+}
+
+.eyebrow::before {
+  animation: pulse-live 2.2s infinite;
+}
+
+/* ─── 5. HEADINGS ──────────────────────────────────────── */
+h1 {
+  font-size: clamp(2.55rem, 5.8vw, 5.3rem);
+  line-height: 1.09;
+  letter-spacing: -0.01em;
+}
+
+.title-line.result {
+  color: #f0d98a;
+  text-shadow: 0 0 70px rgba(232,185,62,0.18);
+}
+
+.subhead { color: #c8cedd; line-height: 1.92; }
+
+/* ─── 6. HERO PROOF CARDS ──────────────────────────────── */
+.hero-proof {
+  border-color: rgba(232,185,62,0.16);
+  background: rgba(232,185,62,0.038);
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.hero-proof:hover {
+  border-color: rgba(232,185,62,0.38);
+  background: rgba(232,185,62,0.07);
+  transform: translateY(-2px);
+}
+
+.hero-proof strong {
+  text-shadow: 0 0 28px rgba(232,185,62,0.28);
+  font-size: 1.25rem;
+}
+
+/* ─── 7. PRICE ─────────────────────────────────────────── */
+.price strong {
+  text-shadow: 0 0 50px rgba(232,185,62,0.3);
+  font-size: clamp(2.9rem, 5vw, 4.7rem);
+}
+
+/* ─── 8. BUTTONS ───────────────────────────────────────── */
+.btn {
+  border-radius: var(--radius);
+  font-size: 0.97rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:active { transform: translateY(1px) scale(0.985) !important; }
+
+/* Primary — gold shimmer */
+.btn-primary {
+  background: linear-gradient(155deg, #f7e490 0%, var(--gold) 38%, var(--gold-2) 100%);
+  color: #080810;
+  box-shadow: 0 14px 44px rgba(232,185,62,0.3), 0 4px 12px rgba(0,0,0,0.35);
+}
+
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+  transition: left 0.55s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 56px rgba(232,185,62,0.38), 0 6px 18px rgba(0,0,0,0.45);
+}
+
+.btn-primary:hover::before { left: 160%; }
+
+/* Secondary */
+.btn-secondary {
+  background: rgba(255,255,255,0.048);
+  border-color: rgba(255,255,255,0.13);
+  backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(232,185,62,0.28);
+  transform: translateY(-2px);
+}
+
+/* ─── 9. TRUST SEALS ───────────────────────────────────── */
+.seal {
+  background: rgba(255,255,255,0.025);
+  border-color: var(--line);
+  font-size: 0.86rem;
+  transition: border-color 0.18s, background 0.18s;
+}
+
+.seal:hover {
+  border-color: rgba(232,185,62,0.22);
+  background: rgba(232,185,62,0.03);
+}
+
+.seal-icon { background: rgba(232,185,62,0.09); }
+
+/* ─── 10. CHECKOUT CARD ────────────────────────────────── */
+.checkout-card {
+  border-color: rgba(232,185,62,0.22);
+  background: linear-gradient(175deg, rgba(255,255,255,0.058) 0%, rgba(255,255,255,0.018) 100%);
+  box-shadow: var(--shadow), 0 0 0 1px rgba(232,185,62,0.05), inset 0 1px 0 rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+}
+
+.checkout-card::before {
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-2), var(--gold), #f7e490, var(--gold), var(--gold-2));
+  background-size: 200% 100%;
+  animation: shimmer-bar 4s linear infinite;
+}
+
+@keyframes shimmer-bar {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Checkout header */
+.co-header {
+  background: linear-gradient(180deg, rgba(232,185,62,0.065) 0%, transparent 100%);
+  border-bottom-color: rgba(232,185,62,0.1);
+}
+
+.co-badge-pill {
+  background: rgba(232,185,62,0.1);
+  border-color: rgba(232,185,62,0.28);
+  color: var(--gold);
+  letter-spacing: 0.04em;
+}
+
+.co-new-price {
+  color: var(--gold);
+  text-shadow: 0 0 32px rgba(232,185,62,0.3);
+}
+
+.co-save-tag {
+  background: rgba(45,216,126,0.12);
+  color: #7cf5b5;
+}
+
+.co-includes li { color: #bcc0d0; }
+.co-includes li::before { color: var(--success); }
+
+/* Form inputs */
+.co-field input {
+  background: rgba(255,255,255,0.035);
+  border-color: rgba(255,255,255,0.09);
+}
+
+.co-field input:focus {
+  border-color: rgba(232,185,62,0.48);
+  box-shadow: 0 0 0 3px rgba(232,185,62,0.07);
+  background: rgba(255,255,255,0.055);
+}
+
+.co-field input::placeholder { color: #32324a; }
+
+/* Pay tabs */
+.co-pay-tabs {
+  background: rgba(0,0,0,0.32);
+  border-color: rgba(255,255,255,0.065);
+}
+
+.co-pay-tab.active {
+  background: rgba(232,185,62,0.09);
+  border-color: rgba(232,185,62,0.30);
+  color: var(--gold);
+}
+
+/* Total row */
+.co-total-amount {
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(232,185,62,0.22);
+}
+
+.co-trust-item { color: #55556e; }
+
+/* ─── 11. SECTION ──────────────────────────────────────── */
+.section {
+  padding: 88px 0;
+  border-top-color: rgba(255,255,255,0.048);
+}
+
+/* Decorative line under section headings */
+.section-heading::after {
+  content: "";
+  display: block;
+  width: 52px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-2), var(--gold), #f7e490);
+  margin: 20px auto 0;
+  border-radius: 999px;
+  opacity: 0.8;
+}
+
+.section-heading h2 {
+  font-size: clamp(2.1rem, 4.2vw, 3.6rem);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+}
+
+.section-heading p { color: var(--muted); }
+
+/* ─── 12. FEATURE CARDS ────────────────────────────────── */
+.feature {
+  border-color: var(--line);
+  background: rgba(255,255,255,0.025);
+  border-radius: 13px;
+  transition: border-color 0.22s, transform 0.22s, background 0.22s, box-shadow 0.22s;
+}
+
+.feature:hover {
+  border-color: rgba(232,185,62,0.22);
+  transform: translateY(-4px);
+  background: rgba(232,185,62,0.03);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.feature p { color: var(--muted); }
+
+/* ─── 13. BONUS CARDS ──────────────────────────────────── */
+.bonus {
+  border-color: rgba(232,185,62,0.13);
+  background: rgba(232,185,62,0.042);
+  border-radius: 12px;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.bonus:hover {
+  border-color: rgba(232,185,62,0.36);
+  background: rgba(232,185,62,0.085);
+  transform: translateY(-3px);
+}
+
+.bonus span {
+  color: var(--gold);
+  letter-spacing: 0.06em;
+}
+
+/* ─── 14. COURSE / PRODUCT CARDS ───────────────────────── */
+.course-card,
+.ebook-card,
+.profit-card {
+  border-color: rgba(232,185,62,0.12);
+  background: rgba(255,255,255,0.025);
+  border-radius: 13px;
+}
+
+.course-card:hover,
+.ebook-card:hover,
+.profit-card:hover {
+  border-color: rgba(232,185,62,0.36);
+  transform: translateY(-5px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.45), 0 0 35px rgba(232,185,62,0.05);
+}
+
+.course-tag, .ebook-tag {
+  background: rgba(45,216,126,0.09);
+  color: #7cf5b5;
+  letter-spacing: 0.05em;
+}
+
+.course-card p, .ebook-card p, .profit-card p { color: var(--muted); }
+
+/* ─── 15. PRODUCT MARQUEE CARDS ────────────────────────── */
+.product-marquee {
+  background: var(--bg);
+  border-top-color: rgba(255,255,255,0.048);
+  padding: 88px 0 96px;
+}
+
+.product-marquee::before {
+  background:
+    radial-gradient(700px 320px at 82% 8%,  rgba(232,185,62,0.06), transparent 60%),
+    radial-gradient(600px 280px at 16% 30%, rgba(30,80,220,0.06),  transparent 60%);
+}
+
+.marquee-viewport::before {
+  background: linear-gradient(to right, var(--bg), transparent);
+}
+.marquee-viewport::after {
+  background: linear-gradient(to left, var(--bg), transparent);
+}
+
+.product-card {
+  border-color: rgba(255,255,255,0.065);
+  background: var(--panel);
+  border-radius: 13px;
+}
+
+.product-card:hover {
+  border-color: rgba(232,185,62,0.30);
+  transform: translateY(-7px);
+  box-shadow: 0 24px 70px rgba(0,0,0,0.6), 0 0 36px rgba(232,185,62,0.04);
+}
+
+.marquee-badge {
+  border-color: rgba(232,185,62,0.26);
+  background: rgba(232,185,62,0.08);
+  letter-spacing: 0.07em;
+}
+
+.marquee-title { letter-spacing: -0.01em; }
+.marquee-sub { color: var(--muted); }
+
+/* ─── 16. STATS GRID ───────────────────────────────────── */
+.stats-grid {
+  border-color: rgba(232,185,62,0.16);
+  background: rgba(255,255,255,0.016);
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-grid::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,185,62,0.35), transparent);
+}
+
+/* Glow on stat numbers */
+.stats-grid strong[style*="gold"] {
+  text-shadow: 0 0 40px rgba(232,185,62,0.25);
+}
+
+/* ─── 17. GUARANTEE ────────────────────────────────────── */
+.guarantee {
+  border-color: rgba(45,216,126,0.22);
+  background: linear-gradient(135deg, rgba(45,216,126,0.07), rgba(255,255,255,0.018));
+  border-radius: 16px;
+}
+
+.badge {
+  box-shadow: 0 0 36px rgba(45,216,126,0.14);
+}
+
+/* ─── 18. VALUE STACK ──────────────────────────────────── */
+.value-stack {
+  border-color: rgba(232,185,62,0.22);
+  background: rgba(255,255,255,0.018);
+  border-radius: 14px;
+}
+
+.value-stack-row { border-bottom-color: rgba(255,255,255,0.038); }
+.value-stack-row.total { background: rgba(232,185,62,0.048); }
+.value-stack-row.price-row-final { background: rgba(45,216,126,0.048); }
+
+/* ─── 19. STEPS ────────────────────────────────────────── */
+.step {
+  border-color: var(--line);
+  background: rgba(255,255,255,0.02);
+  border-radius: 14px;
+  transition: border-color 0.22s, transform 0.22s, box-shadow 0.22s;
+}
+
+.step:hover {
+  border-color: rgba(232,185,62,0.22);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.step-num {
+  background: linear-gradient(155deg, #f7e490 0%, var(--gold) 50%, var(--gold-2) 100%);
+  box-shadow: 0 8px 28px rgba(232,185,62,0.24);
+}
+
+.step-desc { color: var(--muted); }
+
+/* ─── 20. MARKET CARDS ─────────────────────────────────── */
+.market-card {
+  border-color: var(--line);
+  background: rgba(255,255,255,0.025);
+  border-radius: 13px;
+}
+
+.market-card:hover {
+  border-color: rgba(232,185,62,0.28);
+  background: rgba(232,185,62,0.04);
+  transform: translateY(-4px);
+}
+
+.market-icon { background: rgba(232,185,62,0.09); }
+.market-card p { color: var(--muted); }
+
+/* ─── 21. FOR CARDS ────────────────────────────────────── */
+.for-card {
+  border-color: var(--line);
+  background: rgba(255,255,255,0.022);
+  border-radius: 13px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.for-card:hover {
+  border-color: rgba(232,185,62,0.22);
+  transform: translateY(-3px);
+}
+
+.for-desc { color: var(--muted); }
+
+/* ─── 22. TRUST SPLIT ──────────────────────────────────── */
+.trust-panel {
+  border-radius: 14px;
+  background: rgba(255,255,255,0.02);
+}
+
+.trust-panel.bad {
+  border-color: rgba(239,68,68,0.18);
+  background: rgba(239,68,68,0.022);
+}
+
+.trust-panel.good {
+  border-color: rgba(45,216,126,0.20);
+  background: rgba(45,216,126,0.028);
+}
+
+.trust-list { color: #bcc0d0; }
+
+/* ─── 23. ASSURANCE CARDS ──────────────────────────────── */
+.assurance-card {
+  border-color: rgba(232,185,62,0.14);
+  background: linear-gradient(175deg, rgba(255,255,255,0.038), rgba(255,255,255,0.012));
+  border-radius: 14px;
+  transition: border-color 0.22s, transform 0.22s, box-shadow 0.22s;
+}
+
+.assurance-card:hover {
+  border-color: rgba(232,185,62,0.34);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+
+.assurance-card h3 { color: var(--gold); }
+.assurance-card p { color: var(--muted); }
+
+/* ─── 24. TESTIMONIAL CARDS ────────────────────────────── */
+.testimonial-card {
+  border-color: rgba(232,185,62,0.13);
+  background: rgba(255,255,255,0.025);
+  border-radius: 13px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.testimonial-card:hover {
+  border-color: rgba(232,185,62,0.34);
+  transform: translateY(-3px);
+}
+
+.testimonial-card blockquote { color: #bcc0d0; }
+.testimonial-stars { color: var(--gold); }
+
+/* ─── 25. FAQ ──────────────────────────────────────────── */
+.faq-item {
+  border-color: var(--line);
+  background: rgba(255,255,255,0.025);
+  border-radius: 12px;
+  transition: border-color 0.2s;
+}
+
+.faq-item:hover,
+.faq-item.active {
+  border-color: rgba(232,185,62,0.2);
+}
+
+.faq-question { font-size: 0.95rem; }
+.faq-icon { color: var(--gold); }
+.faq-answer p { color: var(--muted); }
+
+/* ─── 26. FINAL OFFER CARD ─────────────────────────────── */
+.final-offer-card {
+  border-color: rgba(232,185,62,0.22);
+  background: linear-gradient(155deg, rgba(232,185,62,0.065), rgba(255,255,255,0.018)), var(--panel);
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.final-offer-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-2), var(--gold), #f7e490, var(--gold), var(--gold-2));
+  background-size: 200% 100%;
+  animation: shimmer-bar 3.5s linear infinite;
+}
+
+.final-offer-card .new-price {
+  text-shadow: 0 0 80px rgba(232,185,62,0.2);
+}
+
+/* ─── 27. STICKY BUY ───────────────────────────────────── */
+.sticky-buy {
+  background: linear-gradient(135deg, #09091a, #05050e);
+  border-top-color: rgba(232,185,62,0.32);
+  box-shadow: 0 -10px 50px rgba(0,0,0,0.75);
+}
+
+.sticky-buy-btn {
+  background: linear-gradient(155deg, #f7e490, var(--gold) 50%, var(--gold-2));
+  box-shadow: 0 8px 26px rgba(232,185,62,0.22);
+  border-radius: 9px;
+}
+
+/* ─── 28. LIVE NOTIFICATION ────────────────────────────── */
+.live-notif {
+  background: var(--panel);
+  border-color: rgba(232,185,62,0.28);
+  border-radius: 13px;
+  box-shadow: 0 14px 48px rgba(0,0,0,0.65);
+}
+
+.live-notif-text strong { color: var(--gold); }
+
+/* ─── 29. COOKIE BANNER ────────────────────────────────── */
+.cookie-banner {
+  background: linear-gradient(180deg, transparent, rgba(5,5,13,0.96) 22%);
+}
+
+.cookie-panel {
+  border-color: rgba(232,185,62,0.26);
+  background: linear-gradient(180deg, #0e0e1e, #080818);
+  box-shadow: 0 -18px 70px rgba(0,0,0,0.65);
+  border-radius: 16px;
+}
+
+.cookie-panel a { color: var(--gold); }
+
+.cookie-accept {
+  background: linear-gradient(155deg, #f7e490, var(--gold) 50%, var(--gold-2));
+  color: #080810;
+}
+
+.cookie-reject {
+  background: rgba(255,255,255,0.045);
+  border-color: rgba(255,255,255,0.13);
+}
+
+/* ─── 30. FOOTER ───────────────────────────────────────── */
+footer {
+  border-top-color: rgba(255,255,255,0.065);
+  color: #50506a;
+}
+
+.footer-links a {
+  color: #b0b0c8;
+  transition: color 0.18s;
+}
+
+.footer-links a:hover { color: var(--gold); }
+
+/* ─── 31. STRIPE MODAL ─────────────────────────────────── */
+.stripe-modal { backdrop-filter: blur(8px); background: rgba(0,0,0,0.84); }
+
+.stripe-panel {
+  background: var(--panel);
+  border-color: rgba(232,185,62,0.26);
+  border-radius: 16px;
+}
+
+.stripe-head { border-bottom-color: var(--line); }
+.stripe-head p { color: var(--muted); }
+.stripe-close { border-color: var(--line); background: rgba(255,255,255,0.045); }
+
+/* ─── 32. BESTSELLER PILLS ─────────────────────────────── */
+.bestseller-pill {
+  border-color: rgba(232,185,62,0.18);
+  background: rgba(255,255,255,0.025);
+  color: #b8bcd0;
+  transition: border-color 0.18s, color 0.18s;
+}
+
+.bestseller-pill:hover {
+  border-color: rgba(232,185,62,0.42);
+  color: var(--gold);
+}
+
+/* ─── 33. INLINE SECTION OVERRIDES ────────────────────── */
+/* Override hardcoded background colors in inline <style> blocks */
+#testimonials-move {
+  background: var(--bg) !important;
+}
+
+#testimonials-move::before {
+  background: radial-gradient(700px 260px at 50% 0%, rgba(232,185,62,0.07), transparent 66%) !important;
+}
+
+.tm-viewport::before {
+  background: linear-gradient(to right, var(--bg), transparent) !important;
+}
+
+.tm-viewport::after {
+  background: linear-gradient(to left, var(--bg), transparent) !important;
+}
+
+.tm-card {
+  background: var(--panel) !important;
+  border-color: rgba(232,185,62,0.16) !important;
+  border-radius: 13px !important;
+}
+
+.tm-card:hover {
+  border-color: rgba(232,185,62,0.48) !important;
+}
+
+.tm-shot { background: #040410 !important; }
+
+#cases-fast {
+  background: var(--bg) !important;
+}
+
+#cases-fast::before {
+  background: radial-gradient(700px 280px at 50% 0%, rgba(56,189,248,0.06), transparent 66%) !important;
+}
+
+#cases-fast .cf-card {
+  background: var(--panel) !important;
+  border-color: rgba(255,255,255,0.07) !important;
+  border-radius: 14px !important;
+}
+
+#cases-fast .cf-card:hover {
+  border-color: rgba(56,189,248,0.45) !important;
+}
+
+#cases-fast .cf-img-wrap {
+  background: #030410 !important;
+  border-color: rgba(255,255,255,0.055) !important;
+}
+
+.books-pack-raqmiy {
+  background: var(--bg) !important;
+}
+
+/* ─── 34. CATALOG SECTION OVERRIDES ────────────────────── */
+.digital-library,
+.book-pack-section {
+  background: var(--bg) !important;
+}
+
+.book-carousel::before {
+  background: linear-gradient(to right, var(--bg), transparent) !important;
+}
+
+.book-carousel::after {
+  background: linear-gradient(to left, var(--bg), transparent) !important;
+}
+
+/* ─── 35. SCROLL ENTRY ANIMATION ───────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.section-heading,
+.feature,
+.bonus,
+.step,
+.market-card,
+.for-card,
+.assurance-card,
+.testimonial-card,
+.course-card,
+.profit-card {
+  animation: fade-up 0.55s ease both;
+  animation-play-state: paused;
+}
+
+.section-heading.is-visible,
+.feature.is-visible,
+.bonus.is-visible,
+.step.is-visible,
+.market-card.is-visible,
+.for-card.is-visible,
+.assurance-card.is-visible,
+.testimonial-card.is-visible,
+.course-card.is-visible,
+.profit-card.is-visible {
+  animation-play-state: running;
+}
+
+/* ─── 36. ARAB MARKET NOTE ─────────────────────────────── */
+.arab-market-note {
+  border-right-color: var(--gold);
+  background: rgba(232,185,62,0.055);
+}
+
+/* ─── 37. HERO STATS SECTION ───────────────────────────── */
+section[aria-label="إحصاءات الحزمة"] {
+  background: rgba(255,255,255,0.012) !important;
+  border-top-color: rgba(255,255,255,0.048) !important;
+  border-bottom-color: rgba(255,255,255,0.048) !important;
+}
+
+/* ─── 38. DIGITAL LIBRARY CARDS ────────────────────────── */
+.digital-library-card {
+  border-color: rgba(232,185,62,0.13) !important;
+  background: rgba(255,255,255,0.025) !important;
+  border-radius: 14px !important;
+  transition: border-color 0.22s, transform 0.22s, box-shadow 0.22s !important;
+}
+
+.digital-library-card:hover {
+  border-color: rgba(232,185,62,0.38) !important;
+  transform: translateY(-5px) !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.45) !important;
+}
+
+.digital-library-btn {
+  color: var(--gold) !important;
+}
+
+/* ─── 39. BOOK ITEMS ────────────────────────────────────── */
+.book-item img {
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+.book-item img:hover {
+  border-color: rgba(232,185,62,0.55) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE FIRST — optimización completa para conversión móvil
+   La mayoría de compradores usan móvil.
+═══════════════════════════════════════════════════════════ */
+
+/* ─── M1. INVERTIR ORDEN EN MÓVIL ──────────────────────── */
+/* El problema crítico: en móvil el pago aparece ANTES del titular */
+@media (max-width: 920px) {
+  .copy        { order: 1 !important; }  /* Titular primero */
+  .checkout-card { order: 2 !important; } /* Pago después */
+
+  .hero-grid {
+    gap: 28px;
+  }
+}
+
+/* ─── M2. HERO MÓVIL ───────────────────────────────────── */
+@media (max-width: 640px) {
+  .hero {
+    padding-top: 28px;
+    padding-bottom: 20px;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 9vw, 2.8rem);
+    line-height: 1.12;
+    margin: 14px 0 14px;
+  }
+
+  .title-line.result,
+  .title-line.emphasis {
+    display: inline;
+  }
+
+  .subhead {
+    font-size: 0.94rem;
+    line-height: 1.75;
+    margin-bottom: 16px;
+  }
+
+  .eyebrow { font-size: 0.74rem; padding: 6px 11px; }
+
+  /* Proof row: horizontal en móvil */
+  .hero-proof-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .hero-proof { padding: 10px 8px; }
+  .hero-proof strong { font-size: 1rem; }
+  .hero-proof span { font-size: 0.68rem; margin-top: 4px; }
+
+  /* Precio compacto */
+  .price-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  .price strong { font-size: 3rem; }
+
+  /* Botones full-width apilados */
+  .hero-actions {
+    flex-direction: column;
+    gap: 10px;
+    margin: 16px 0 16px;
+  }
+
+  .btn { width: 100%; min-height: 52px; font-size: 1rem; }
+
+  /* Trust seals: fila horizontal */
+  .trust-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+    margin-top: 16px;
+  }
+
+  .seal {
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+    min-height: 54px;
+    padding: 10px 6px;
+    font-size: 0.72rem;
+  }
+
+  .seal-icon { width: 26px; height: 26px; flex: none; }
+}
+
+/* ─── M3. CHECKOUT CARD MÓVIL — COMPACTO Y EFECTIVO ─────── */
+@media (max-width: 640px) {
+
+  /* Checkout card: sin padding excesivo */
+  .checkout-card {
+    border-radius: 14px;
+    margin: 0;
+  }
+
+  /* Header del checkout: más compacto */
+  .co-header {
+    padding: 16px 18px 14px;
+  }
+
+  .co-badge-pill {
+    font-size: 0.7rem;
+    padding: 3px 10px;
+    margin-bottom: 8px;
+  }
+
+  .co-product-title {
+    font-size: 0.96rem;
+    margin-bottom: 8px;
+  }
+
+  .co-price-wrap {
+    margin-bottom: 10px;
+    gap: 8px;
+  }
+
+  .co-new-price { font-size: 1.85rem; }
+  .co-old-price { font-size: 0.84rem; }
+
+  /* Lista de includes: más compacta */
+  .co-includes { gap: 4px; }
+  .co-includes li { font-size: 0.8rem; gap: 7px; }
+
+  /* Cuerpo del checkout */
+  .co-body { padding: 16px 18px 18px; }
+
+  .co-step-label {
+    font-size: 0.68rem;
+    margin-bottom: 10px;
+  }
+
+  /* Campos más compactos */
+  .co-fields { gap: 9px; }
+
+  .co-field label { font-size: 0.72rem; margin-bottom: 4px; }
+
+  .co-field input {
+    padding: 10px 12px;
+    font-size: 0.92rem;
+    border-radius: 8px;
+  }
+
+  /* Tabs de pago */
+  .co-pay-tabs { padding: 4px; margin-bottom: 12px; }
+
+  .co-pay-tab {
+    padding: 8px 6px;
+    font-size: 0.8rem;
+    gap: 5px;
+  }
+
+  /* Total row */
+  .co-total-row {
+    padding: 10px 0;
+    margin: 12px 0;
+    font-size: 0.86rem;
+  }
+
+  .co-total-amount { font-size: 1.15rem; }
+
+  /* Trust strip horizontal */
+  .co-trust-strip { gap: 10px; margin-bottom: 6px; }
+  .co-trust-item { font-size: 0.7rem; gap: 4px; }
+
+  /* Botón de pago: grande y llamativo */
+  .stripe-button,
+  #pane-card .btn {
+    min-height: 54px !important;
+    font-size: 1.02rem !important;
+    border-radius: 10px !important;
+  }
+}
+
+/* ─── M4. SECCIONES MÓVIL ──────────────────────────────── */
+@media (max-width: 640px) {
+  .section { padding: 44px 0; }
+
+  .section-heading { margin-bottom: 24px; }
+  .section-heading h2 { font-size: clamp(1.55rem, 6.5vw, 2rem); }
+  .section-heading p { font-size: 0.92rem; }
+
+  /* Stats: 2 columnas */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 20px 14px;
+    gap: 12px;
+  }
+
+  /* Grids a 1 columna */
+  .features,
+  .bonus-grid,
+  .course-grid,
+  .ebook-grid,
+  .profit-grid,
+  .testimonial-grid,
+  .assurance-grid,
+  .steps,
+  .market-grid,
+  .for-grid { grid-template-columns: 1fr; }
+
+  /* Trust split a 1 columna */
+  .trust-split { grid-template-columns: 1fr; }
+
+  /* Garantía */
+  .guarantee {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 24px 18px;
+  }
+
+  .badge { margin: 0 auto 18px; }
+
+  /* Final offer */
+  .final-offer-card { padding: 28px 18px; }
+  .final-offer-card .new-price { font-size: clamp(2.5rem, 10vw, 3.5rem); }
+
+  /* Final CTA */
+  .final-cta { padding: 44px 0 56px; }
+  .final-cta h2 { font-size: clamp(1.8rem, 7vw, 2.4rem); }
+  .final-cta .btn { width: 100%; }
+
+  /* Value stack */
+  .value-stack-row { padding: 12px 14px; flex-wrap: wrap; gap: 6px; }
+  .value-stack-name { font-size: 0.84rem; }
+  .value-stack-val { font-size: 0.82rem; }
+
+  /* Marquee cards más estrechas */
+  .product-card { flex-basis: 80vw; width: 80vw; }
+  .marquee-viewport::before,
+  .marquee-viewport::after { width: 44px; }
+
+  /* Bestseller pills */
+  .bestseller-strip { gap: 8px; }
+  .bestseller-pill { padding: 7px 12px; font-size: 0.8rem; }
+
+  /* Steps */
+  .step { padding: 24px 16px; }
+  .step-num { width: 40px; height: 40px; font-size: 1rem; margin-bottom: 14px; }
+
+  /* FAQ */
+  .faq-question { padding: 15px 16px; font-size: 0.9rem; }
+  .faq-answer p { padding: 0 16px 15px; font-size: 0.88rem; }
+
+  /* Cookie banner */
+  .cookie-panel {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 16px;
+  }
+  .cookie-actions { grid-template-columns: 1fr; gap: 8px; }
+  .cookie-accept, .cookie-reject { min-height: 44px; }
+
+  /* Footer */
+  footer { padding: 20px 0 32px; }
+  .footer-links { gap: 10px; }
+  .footer-links a { font-size: 0.82rem; }
+
+  /* Sticky buy */
+  .sticky-buy {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    padding: 10px 16px 14px;
+    gap: 10px;
+  }
+
+  .sticky-buy-btn { width: 100%; text-align: center; padding: 13px; }
+}
+
+/* ─── M5. TABLET ───────────────────────────────────────── */
+@media (min-width: 641px) and (max-width: 920px) {
+  .hero { padding: 44px 0 32px; }
+
+  h1 { font-size: clamp(2.4rem, 5vw, 3.2rem); }
+
+  .features { grid-template-columns: repeat(2, 1fr); }
+  .bonus-grid,
+  .course-grid,
+  .ebook-grid,
+  .profit-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .market-grid,
+  .assurance-grid,
+  .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .steps { gap: 16px; }
+
+  .checkout-card { max-width: 520px; margin: 0 auto; }
+}
+
+/* ─── M6. RENDIMIENTO — reducir animaciones en móvil ───── */
+@media (max-width: 640px) {
+  /* Desactivar grain texture en móvil (ahorra GPU) */
+  body::after { display: none; }
+
+  /* Shimmer del botón solo en hover (desktop) — en móvil off */
+  .btn-primary::before { display: none; }
+
+  /* Reducir glow de texto (ahorra repaint) */
+  .title-line.result { text-shadow: none; }
+  .price strong { text-shadow: none; }
+  .co-new-price { text-shadow: none; }
+
+  /* Animación shimmer del checkout: off en móvil */
+  .checkout-card::before { animation: none; }
+  .final-offer-card::before { animation: none; }
+}

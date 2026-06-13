@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin - Digital Products Pack</title>
+  <style>
+    :root{--bg:#050505;--panel:#111114;--line:rgba(255,255,255,.1);--text:#f8fafc;--muted:#a1a1aa;--gold:#fbbf24;--gold2:#f59e0b;--ok:#22c55e;--bad:#ef4444;--radius:8px}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 20% 10%,rgba(251,191,36,.14),transparent 28%),#050505;color:var(--text);line-height:1.5}
+    main{width:min(1100px,calc(100% - 32px));margin:0 auto;padding:38px 0 70px}
+    header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:28px}
+    h1{margin:0 0 8px;font-size:clamp(2rem,5vw,3.6rem);line-height:1;font-weight:900}
+    p{margin:0;color:var(--muted)}
+    a{color:var(--gold);text-decoration:none;font-weight:800}
+
+    /* Tabs */
+    .tabs{display:flex;gap:6px;margin-bottom:22px;border-bottom:1px solid var(--line);padding-bottom:0}
+    .tab-btn{padding:10px 20px;border:0;border-radius:var(--radius) var(--radius) 0 0;background:transparent;color:var(--muted);font-weight:700;cursor:pointer;font:inherit;font-size:.92rem;border-bottom:2px solid transparent;margin-bottom:-1px}
+    .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(251,191,36,.06)}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* Card */
+    .card{border:1px solid rgba(251,191,36,.28);border-radius:var(--radius);background:rgba(255,255,255,.045);box-shadow:0 24px 80px rgba(0,0,0,.42);overflow:hidden;margin-bottom:18px}
+    .bar{height:5px;background:linear-gradient(90deg,var(--gold),#f97316,var(--gold))}
+    .content{padding:22px}
+
+    /* Form */
+    .login{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;margin-bottom:16px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    label{display:grid;gap:7px;color:#e4e4e7;font-size:.88rem;font-weight:800}
+    input,textarea{width:100%;border:1px solid var(--line);border-radius:var(--radius);background:rgba(0,0,0,.32);color:var(--text);padding:12px;font:inherit}
+    textarea{min-height:90px;resize:vertical}
+    .full{grid-column:1/-1}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    button{min-height:46px;border:0;border-radius:var(--radius);padding:12px 16px;cursor:pointer;font-weight:900;font:inherit}
+    .primary{color:#111;background:linear-gradient(180deg,#fde68a,var(--gold) 54%,var(--gold2))}
+    .secondary{border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.06)}
+    .danger{border:1px solid rgba(239,68,68,.4);color:#fecaca;background:rgba(239,68,68,.08)}
+    .status{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:var(--radius);color:var(--muted);background:rgba(0,0,0,.22)}
+    .status.ok{border-color:rgba(34,197,94,.38);color:#bbf7d0}
+    .status.bad{border-color:rgba(239,68,68,.38);color:#fecaca}
+    .hint{margin-top:18px;border-top:1px solid var(--line);padding-top:16px;font-size:.92rem}
+
+    /* Stats row */
+    .stats-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:22px}
+    .stat-card{padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,255,255,.04);text-align:center}
+    .stat-val{font-size:2rem;font-weight:900;color:var(--gold);margin:0 0 4px}
+    .stat-label{color:var(--muted);font-size:.82rem;font-weight:700;margin:0}
+
+    /* Orders table */
+    .orders-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+    .search-input{border:1px solid var(--line);border-radius:var(--radius);background:rgba(0,0,0,.32);color:var(--text);padding:10px 14px;font:inherit;width:260px}
+    .table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--line)}
+    table{width:100%;border-collapse:collapse;font-size:.9rem}
+    th{padding:12px 14px;text-align:left;font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.03);white-space:nowrap}
+    td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle}
+    tr:last-child td{border-bottom:0}
+    tr:hover td{background:rgba(255,255,255,.025)}
+    .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:800}
+    .badge-stripe{background:rgba(99,102,241,.18);color:#a5b4fc;border:1px solid rgba(99,102,241,.3)}
+    .badge-paypal{background:rgba(251,191,36,.14);color:#fbbf24;border:1px solid rgba(251,191,36,.28)}
+    .badge-ok{background:rgba(34,197,94,.12);color:#86efac;border:1px solid rgba(34,197,94,.28)}
+    .order-num{font-weight:900;color:var(--gold);font-size:.95rem}
+    .amount-cell{font-weight:800;color:#86efac}
+    .empty-state{padding:48px;text-align:center;color:var(--muted)}
+    .empty-state svg{margin-bottom:12px;opacity:.4}
+
+    /* Products tab */
+    .prod-layout{display:grid;grid-template-columns:340px 1fr;gap:22px;align-items:start}
+    .prod-form-card{position:sticky;top:20px}
+    .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+    .prod-card{border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,255,255,.04);overflow:hidden;display:flex;flex-direction:column}
+    .prod-card img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#1a1a22;display:block}
+    .prod-card-no-img{width:100%;aspect-ratio:4/3;background:#1a1a22;display:flex;align-items:center;justify-content:center;font-size:2rem;color:rgba(255,255,255,.18)}
+    .prod-card-body{padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:6px}
+    .prod-card-name{font-weight:800;font-size:.9rem;line-height:1.35;flex:1}
+    .prod-card-cat{font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:999px;width:fit-content;background:rgba(251,191,36,.14);color:var(--gold);border:1px solid rgba(251,191,36,.28)}
+    .prod-card-actions{display:flex;gap:6px;margin-top:6px}
+    .prod-card-actions button{min-height:32px;padding:4px 10px;font-size:.8rem;flex:1}
+    .prod-grid-empty{grid-column:1/-1;padding:48px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.12);border-radius:var(--radius)}
+    .cat-manager{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+    .cat-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px}
+    .cat-list{display:flex;flex-wrap:wrap;gap:7px}
+    .cat-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.05);padding:5px 8px 5px 10px;font-size:.78rem;font-weight:800}
+    .cat-chip button{min-height:22px;width:22px;padding:0;border-radius:999px;font-size:.78rem;line-height:1;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text)}
+    .cat-chip button:hover{border-color:rgba(251,191,36,.45);color:var(--gold)}
+    .cat-chip .delete-category-btn{background:rgba(239,68,68,.12);color:#fecaca;border-color:rgba(239,68,68,.3)}
+    select{width:100%;border:1px solid var(--line);border-radius:var(--radius);background:rgba(0,0,0,.32);color:var(--text);padding:12px;font:inherit;appearance:none}
+    .active-toggle{display:flex;align-items:center;gap:10px;padding:10px 0}
+    .toggle{position:relative;display:inline-block;width:40px;height:22px}
+    .toggle input{opacity:0;width:0;height:0}
+    .toggle-slider{position:absolute;inset:0;border-radius:999px;background:#444;cursor:pointer;transition:.2s}
+    .toggle-slider::before{content:"";position:absolute;width:16px;height:16px;left:3px;bottom:3px;border-radius:50%;background:#fff;transition:.2s}
+    .toggle input:checked + .toggle-slider{background:var(--gold)}
+    .toggle input:checked + .toggle-slider::before{transform:translateX(18px)}
+    .prod-status{margin-top:12px;padding:10px 14px;border:1px solid var(--line);border-radius:var(--radius);color:var(--muted);font-size:.88rem;background:rgba(0,0,0,.22)}
+    .prod-status.ok{border-color:rgba(34,197,94,.38);color:#bbf7d0}
+    .prod-status.bad{border-color:rgba(239,68,68,.38);color:#fecaca}
+
+    /* Messages tab */
+    .msg-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+    .filter-btns{display:flex;gap:6px}
+    .filter-btn{padding:5px 14px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--muted);font:inherit;font-size:.78rem;font-weight:700;cursor:pointer;transition:.15s}
+    .filter-btn.active{border-color:rgba(251,191,36,.4);color:var(--gold);background:rgba(251,191,36,.08)}
+    .tab-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;border-radius:999px;background:var(--gold);color:#111;font-size:.65rem;font-weight:900;padding:0 4px;margin-left:5px;vertical-align:middle}
+    .msg-list{display:flex;flex-direction:column;gap:10px}
+    .msg-card{border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,255,255,.04);overflow:hidden}
+    .msg-card.unread{border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.03)}
+    .msg-card-header{display:flex;justify-content:space-between;align-items:flex-start;padding:14px 18px 0;gap:12px}
+    .msg-sender{font-weight:900;font-size:.95rem;display:flex;align-items:center;gap:8px}
+    .unread-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;display:inline-block}
+    .msg-from-email{color:var(--gold);font-size:.8rem;margin-top:2px}
+    .msg-meta{display:flex;gap:7px;align-items:center;flex-shrink:0}
+    .msg-date{color:var(--muted);font-size:.75rem;white-space:nowrap}
+    .msg-subject-row{padding:8px 18px;font-size:.85rem;font-weight:700;color:var(--muted)}
+    .msg-body{padding:12px 18px 14px;font-size:.9rem;line-height:1.65;color:#d4d4d8;border-top:1px solid rgba(255,255,255,.06);white-space:pre-wrap;word-break:break-word}
+    .msg-replies{padding:12px 18px 14px;border-top:1px solid rgba(251,191,36,.12);background:rgba(251,191,36,.035);display:grid;gap:8px}
+    .msg-replies-title{font-size:.76rem;color:var(--gold);font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+    .msg-reply-item{border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(0,0,0,.22);padding:10px 12px}
+    .msg-reply-date{font-size:.72rem;color:var(--muted);font-weight:800;margin-bottom:6px}
+    .msg-reply-body{font-size:.86rem;line-height:1.6;color:#d4d4d8;white-space:pre-wrap;word-break:break-word}
+    .msg-actions{padding:10px 18px;border-top:1px solid rgba(255,255,255,.05);display:flex;gap:8px;flex-wrap:wrap}
+    .reply-form{display:none;border-top:1px solid rgba(251,191,36,.18);background:rgba(251,191,36,.03);padding:14px 18px}
+    .reply-form.open{display:block}
+    .reply-form textarea{width:100%;border:1px solid rgba(255,255,255,.12);border-radius:var(--radius);background:rgba(0,0,0,.3);color:var(--text);font:inherit;font-size:.88rem;padding:10px 12px;min-height:90px;resize:vertical}
+    .reply-form textarea:focus{outline:none;border-color:rgba(251,191,36,.4)}
+    .reply-form-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+    #tab-messages{direction:rtl;text-align:right}
+    #tab-messages .msg-card-header{direction:rtl}
+    #tab-messages .msg-meta{direction:ltr}
+    #tab-messages .msg-body,
+    #tab-messages .msg-reply-body,
+    #tab-messages .reply-form textarea{direction:rtl;text-align:right}
+    #tab-messages .msg-from-email{direction:ltr;text-align:right}
+
+    @media(max-width:900px){.prod-layout{grid-template-columns:1fr}}
+    @media(max-width:720px){
+      header,.login{display:grid;grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+      .stats-row{grid-template-columns:repeat(2,1fr)}
+      .search-input{width:100%}
+    }
+
+    /* ── Image upload component ── */
+    .img-upload-wrap{display:flex;gap:10px;align-items:flex-start}
+    .img-preview-box{width:76px;height:76px;border-radius:6px;background:#1a1a22;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;cursor:pointer}
+    .img-preview-box img{width:100%;height:100%;object-fit:cover;display:block}
+    .img-preview-ph{font-size:1.6rem;opacity:.35}
+    .img-inner{flex:1;min-width:0}
+    .img-tabs{display:flex;margin-bottom:7px;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+    .img-tab{flex:1;padding:5px 8px;font:inherit;font-size:.78rem;font-weight:800;border:0;background:transparent;color:var(--muted);cursor:pointer;transition:.15s}
+    .img-tab.active{background:rgba(251,191,36,.14);color:var(--gold)}
+    .img-pick-btn{width:100%;min-height:38px;font-size:.85rem;border:1px dashed rgba(251,191,36,.4);background:rgba(251,191,36,.04);color:var(--gold);border-radius:var(--radius);cursor:pointer;font:inherit;font-weight:800;transition:.15s}
+    .img-pick-btn:hover{background:rgba(251,191,36,.1)}
+    .img-status{font-size:.76rem;margin-top:4px;min-height:16px;color:var(--muted);word-break:break-all}
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Admin privado</h1>
+        <p>Pedidos, configuración y notificaciones — sin tocar GitHub. <span style="color:var(--muted);font-size:.7rem;font-weight:400">v7</span></p>
+      </div>
+      <p><a href="./index.html">Ver landing</a></p>
+    </header>
+
+    <!-- Auth row (siempre visible) -->
+    <div class="card" style="margin-bottom:18px">
+      <div class="bar"></div>
+      <div class="content" style="padding:16px 22px">
+        <div class="login">
+          <label style="margin:0">
+            Contraseña admin
+            <input id="admin-password" type="password" autocomplete="current-password" placeholder="ADMIN_PASSWORD de Cloudflare">
+          </label>
+          <button class="primary" id="load-btn" type="button" style="margin-top:auto">Entrar</button>
+        </div>
+        <div class="status" id="auth-status">Introduce la contraseña y pulsa Entrar.</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="orders" type="button">🛒 Pedidos</button>
+      <button class="tab-btn" data-tab="carts" type="button">🛍️ Carritos</button>
+      <button class="tab-btn" data-tab="reminders" type="button">✉️ Recordatorios</button>
+      <button class="tab-btn" data-tab="products" type="button">📦 Productos</button>
+      <button class="tab-btn" data-tab="config" type="button">⚙️ Configuración</button>
+      <button class="tab-btn" data-tab="messages" type="button">💬 Mensajes<span class="tab-badge" id="msg-badge" style="display:none">0</span></button>
+    </div>
+
+    <!-- ===== TAB: PEDIDOS ===== -->
+    <div class="tab-panel active" id="tab-orders">
+      <div class="stats-row">
+        <div class="stat-card"><p class="stat-val" id="stat-total">—</p><p class="stat-label">Total pedidos</p></div>
+        <div class="stat-card"><p class="stat-val" id="stat-revenue">—</p><p class="stat-label">Ingresos</p></div>
+        <div class="stat-card"><p class="stat-val" id="stat-stripe">—</p><p class="stat-label">Stripe</p></div>
+        <div class="stat-card"><p class="stat-val" id="stat-paypal">—</p><p class="stat-label">PayPal</p></div>
+      </div>
+
+      <div class="orders-toolbar">
+        <strong style="font-size:1.05rem">Historial de pedidos</strong>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input class="search-input" id="search-orders" type="text" placeholder="Buscar por nº, email…">
+          <button class="secondary" id="refresh-orders" type="button" style="min-height:42px">↺ Actualizar</button>
+          <button class="secondary" id="export-csv" type="button" style="min-height:42px">⬇ CSV</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:18px">
+        <h2 style="font-size:1rem;margin-bottom:10px">Recuperar pedido PayPal</h2>
+        <div class="grid">
+          <label>Email del cliente<input id="recover-email" type="email" placeholder="cliente@email.com"></label>
+          <label>ID/ref. PayPal<input id="recover-paypal-id" type="text" placeholder="opcional pero recomendado"></label>
+          <label>Importe<input id="recover-amount" type="number" min="0" step="0.01" placeholder="usa el precio configurado"></label>
+          <label>Moneda<input id="recover-currency" type="text" maxlength="3" placeholder="USD"></label>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px">
+          <button class="primary" id="recover-paypal-btn" type="button">Enviar acceso al cliente</button>
+          <span id="recover-status" style="font-size:.9rem;color:var(--muted)"></span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nº Pedido</th>
+              <th>Fecha</th>
+              <th>Importe</th>
+              <th>Método</th>
+              <th>Email cliente</th>
+              <th>Idioma</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="orders-body">
+            <tr><td colspan="7" class="empty-state">Carga la configuración para ver los pedidos.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== TAB: CARRITOS ===== -->
+    <div class="tab-panel" id="tab-carts">
+      <div class="stats-row">
+        <div class="stat-card"><p class="stat-val" id="cart-stat-abandoned">—</p><p class="stat-label">Carritos Abandonados</p></div>
+        <div class="stat-card"><p class="stat-val" id="cart-stat-recovered">—</p><p class="stat-label">Cestas recuperadas</p></div>
+        <div class="stat-card"><p class="stat-val" id="cart-stat-reminders">—</p><p class="stat-label">Recordatorios enviados</p></div>
+        <div class="stat-card"><p class="stat-val" id="cart-stat-eligible">—</p><p class="stat-label">Elegible para la campaña</p></div>
+      </div>
+      <div class="orders-toolbar">
+        <strong style="font-size:1.05rem">Recuperar cestas abandonadas</strong>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="filter-btn cart-filter-btn active" data-cart-filter="abandoned" type="button">Abandonado</button>
+          <button class="filter-btn cart-filter-btn" data-cart-filter="recovered" type="button">Recuperado</button>
+          <button class="secondary" id="refresh-carts" type="button" style="min-height:38px;font-size:.85rem">↺ actualizar</button>
+        </div>
+      </div>
+      <div class="status" id="cart-status" style="margin:0 0 14px">Puedes enviar un recordatorio por cada carrito abandonado.</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>la fecha</th><th>correo</th><th>la condición</th><th>Procedimiento</th></tr></thead>
+          <tbody id="carts-body"><tr><td colspan="4" class="empty-state">Ingrese la contraseña de administración para ver las cestas.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== TAB: RECORDATORIOS ===== -->
+    <div class="tab-panel" id="tab-reminders">
+      <div class="card">
+        <div class="bar"></div>
+        <div class="content" dir="ltr" style="text-align:right">
+          <p style="color:var(--text);font-weight:900;font-size:1.05rem;margin-bottom:8px">Mensaje recordatorio del carrito</p>
+          <p style="margin-bottom:18px">Un sencillo mensaje en árabe sin descuentos ni códigos.. Los compradores y las bajas quedan automáticamente excluidos..</p>
+          <div class="grid">
+            <label>Esperando horas antes de la campaña<input id="cartCampaignMinHours" type="number" min="0" max="168" step="1" value="1"></label>
+            <label class="full">dirección de correo<input id="cartReminderSubject" type="text"></label>
+            <label class="full">La dirección dentro del mensaje.<input id="cartReminderHeadline" type="text"></label>
+            <label class="full">Texto<textarea id="cartReminderBody"></textarea></label>
+            <label>Texto del botón<input id="cartReminderCta" type="text"></label>
+            <label class="full">Dirección postal comercial <span style="color:#f87171">*</span>
+              <input id="businessAddress" type="text" placeholder="Calle, ciudad, código postal, país" required>
+            </label>
+          </div>
+          <div class="actions"><button class="primary" id="save-reminder" type="button">guardar el recordatorio</button></div>
+          <div class="status" id="reminder-status">Ingrese la contraseña de administración y presione Iniciar sesión.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="bar"></div>
+        <div class="content" dir="ltr" style="text-align:right">
+          <p style="color:var(--text);font-weight:900;font-size:1.05rem;margin-bottom:8px">Campaña para todas las cestas elegibles</p>
+          <p>Envíe con un clic y excluya a compradores, canceladores y aquellos que recibieron previamente el recordatorio.</p>
+          <div class="actions"><button class="primary" id="send-cart-campaign" type="button">Enviar la campaña a personas elegibles</button></div>
+          <div class="status" id="campaign-status">Actualiza las cestas para ver cuántas son elegibles.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="bar"></div>
+        <div class="content" dir="ltr" style="text-align:right">
+          <p style="color:var(--text);font-weight:900;margin-bottom:10px">Mejorar el acceso al correo</p>
+          <p>Se incluyen texto sin formato, un enlace para cancelar la suscripción con un solo clic y enlaces del mismo dominio.. en Resend Cerciorarse SPF y DKIM y se detuvo Open Tracking y Click Tracking Temporalmente durante la prueba.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: PRODUCTOS ===== -->
+    <div class="tab-panel" id="tab-products">
+      <div class="prod-layout">
+
+        <!-- Left: Add form -->
+        <div class="prod-form-card">
+          <div class="card">
+            <div class="bar"></div>
+            <div class="content">
+              <p id="prod-form-title" style="font-weight:900;font-size:1rem;margin:0 0 16px">Añadir producto</p>
+              <div style="display:grid;gap:12px">
+                <label>Nombre<input id="prod-name" type="text" placeholder="Ej: Pack Canva Premium 2024"></label>
+                <label>Categoría
+                  <select id="prod-category"></select>
+                </label>
+                <label>Se desbloquea con
+                  <select id="prod-access">
+                    <option value="main">Compra principal</option>
+                    <option value="bump">Order bump</option>
+                    <option value="upsell">Upsell</option>
+                  </select>
+                </label>
+                <label>Imagen del producto
+                  <input type="hidden" id="prod-image">
+                  <div class="img-upload-wrap">
+                    <div class="img-preview-box" id="img-preview-box" title="Haz clic para subir imagen">
+                      <span class="img-preview-ph">📷</span>
+                    </div>
+                    <div class="img-inner">
+                      <div class="img-tabs">
+                        <button type="button" class="img-tab active" data-mode="upload">⬆ Subir foto</button>
+                        <button type="button" class="img-tab" data-mode="url">🔗 URL</button>
+                      </div>
+                      <div id="img-mode-upload">
+                        <button type="button" class="img-pick-btn" id="img-pick-btn">📂 Seleccionar imagen…</button>
+                        <input type="file" id="img-file-input" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none">
+                      </div>
+                      <div id="img-mode-url" style="display:none">
+                        <input id="prod-image-url" type="url" placeholder="https://…/imagen.jpg" style="font-size:.88rem">
+                      </div>
+                      <div class="img-status" id="img-upload-status"></div>
+                    </div>
+                  </div>
+                </label>
+                <label>URL de acceso del producto<input id="prod-download" type="url" placeholder="https://..."></label>
+                <label>Descripción (opcional)<textarea id="prod-description" style="min-height:70px" placeholder="Breve descripción del producto…"></textarea></label>
+                <label class="active-toggle">
+                  <span class="toggle">
+                    <input id="prod-active" type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                  </span>
+                  Producto visible en el portal
+                </label>
+              </div>
+              <div class="actions" style="margin-top:16px">
+                <button class="primary" id="save-product-btn" type="button" style="flex:1">Añadir producto</button>
+                <button class="secondary" id="cancel-edit-btn" type="button" style="display:none">Cancelar</button>
+              </div>
+              <div class="prod-status" id="prod-form-status">Introduce la contraseña y pulsa Entrar.</div>
+              <div id="prod-debug" style="font-size:.7rem;color:var(--muted);margin-top:4px;padding:5px 10px;background:rgba(255,255,255,.03);border-radius:4px;border:1px solid rgba(255,255,255,.07)">v7 — cargando…</div>
+
+              <div class="cat-manager">
+                <p style="font-weight:900;font-size:.92rem;margin:0 0 10px;color:var(--text)">Categorías</p>
+                <div class="cat-row">
+                  <input id="new-category" type="text" placeholder="Nueva categoría">
+                  <button class="secondary" id="add-category-btn" type="button" style="min-height:42px">Añadir</button>
+                </div>
+                <div class="cat-list" id="cat-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Product grid -->
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+            <strong style="font-size:1.05rem">Catálogo de productos (<span id="prod-count">0</span>)</strong>
+            <div style="display:flex;gap:8px;align-items:center">
+              <div class="filter-btns" style="margin:0">
+                <button class="filter-btn active" id="view-table-btn" type="button">Tabla</button>
+                <button class="filter-btn" id="view-grid-btn" type="button">Cuadrícula</button>
+              </div>
+              <button class="secondary" id="refresh-products" type="button" style="min-height:38px;font-size:.85rem">↺ Actualizar</button>
+            </div>
+          </div>
+
+          <div id="prod-view-container">
+            <!-- Table View -->
+            <div class="table-wrap" id="prod-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Acceso</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="prod-table-body">
+                  <tr><td colspan="6" class="empty-state">Carga la configuración para ver los productos.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Grid View -->
+            <div class="prod-grid" id="prod-grid" style="display:none">
+              <div class="prod-grid-empty">Carga la configuración para ver los productos.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== TAB: CONFIGURACIÓN ===== -->
+    <div class="tab-panel" id="tab-config">
+      <div class="card">
+        <div class="bar"></div>
+        <div class="content">
+
+          <div class="grid">
+            <label>Nombre del producto<input id="productName" type="text"></label>
+            <label>Precio<input id="price" type="number" min="1" step="1"></label>
+            <label>Moneda<input id="currency" type="text" maxlength="3"></label>
+            <label>Horas del contador<input id="countdownHours" type="number" min="1" max="72" step="1"></label>
+            <label class="full">URL de entrega PayPal<input id="successUrl" type="text"></label>
+            <label class="full">URL legacy de descarga directa (opcional, el acceso principal es panel.html)<input id="downloadUrl" type="url"></label>
+            <label>Email de soporte<input id="supportEmail" type="email"></label>
+            <label>Meta Pixel ID
+              <input id="metaPixelId" type="text" placeholder="Ej: 1234567890123456">
+              <span style="color:#86efac;font-size:.78rem;font-weight:600;margin-top:4px;display:block">✅ El Pixel dispara PageView + ViewContent inmediatamente al cargar, y Purchase al confirmar pago — sin depender del cookie consent.</span>
+            </label>
+            <label>Google Tag Manager ID
+              <input id="gtmId" type="text" placeholder="GTM-XXXXXXX — dejar vacío si GTM ya está en el HTML">
+              <span style="color:#fbbf24;font-size:.78rem;font-weight:600;margin-top:4px;display:block">⚠️ GTM-P6X6DZCH ya está integrado en el código. Si el Pixel también está en ese contenedor GTM, deja el Pixel ID vacío aquí para evitar doble conteo.</span>
+            </label>
+            <label class="full">Stripe Publishable Key<input id="stripePublishableKey" type="text" placeholder="pk_live_..."></label>
+            <label class="full">Stripe Price ID principal (opcional)<input id="stripePriceId" type="text" placeholder="Opcional: price_... Si lo dejas vacio se usa el precio del panel"></label>
+            <label class="full">PayPal Client ID<input id="paypalClientId" type="text"></label>
+            <label class="full">PayPal Client Secret<input id="paypalClientSecret" type="password"></label>
+            <label class="full">PayPal Merchant ID<input id="paypalMerchantId" type="text"></label>
+          </div>
+
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
+            <p style="color:var(--text);font-weight:800;margin-bottom:14px">🧲 Funnel: Order bump y Upsell</p>
+            <div class="grid">
+              <label class="full active-toggle">
+                <span class="toggle">
+                  <input id="orderBumpEnabled" type="checkbox">
+                  <span class="toggle-slider"></span>
+                </span>
+                Mostrar order bump en checkout
+              </label>
+              <label>Nombre del bump<input id="orderBumpName" type="text" placeholder="Pack extra premium"></label>
+              <label>Precio bump<input id="orderBumpPrice" type="number" min="0" step="1"></label>
+              <label class="full">Descripcion bump<textarea id="orderBumpDescription" style="min-height:72px" placeholder="Texto corto que aparece junto al checkbox"></textarea></label>
+              <label class="full">Imagen del bump<input id="orderBumpImageUrl" type="url" placeholder="https://... imagen del bonus/order bump"></label>
+              <label class="full">Stripe Price ID del bump (opcional)<input id="orderBumpStripePriceId" type="text" placeholder="Opcional: price_... Si lo dejas vacio se usa el precio bump del panel"></label>
+
+              <label class="full active-toggle" style="margin-top:8px">
+                <span class="toggle">
+                  <input id="upsellEnabled" type="checkbox">
+                  <span class="toggle-slider"></span>
+                </span>
+                Activar upsell post-compra
+              </label>
+              <label>Nombre del upsell<input id="upsellName" type="text" placeholder="Actualizacion PRO"></label>
+              <label>Precio upsell<input id="upsellPrice" type="number" min="0" step="1"></label>
+              <label class="full">Descripcion upsell<textarea id="upsellDescription" style="min-height:72px" placeholder="Texto corto para la oferta despues de comprar"></textarea></label>
+              <label class="full">Imagen del upsell<input id="upsellImageUrl" type="url" placeholder="https://... imagen de la oferta upsell"></label>
+              <label class="full">Stripe Price ID del upsell (opcional)<input id="upsellStripePriceId" type="text" placeholder="Opcional: price_... Si lo dejas vacio se usa el precio upsell del panel"></label>
+            </div>
+          </div>
+
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
+            <p style="color:var(--text);font-weight:800;margin-bottom:12px">🔐 Google OAuth — inicio de sesión en el panel</p>
+            <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.25);border-radius:8px;padding:14px 16px;margin-bottom:14px;font-size:.84rem;color:#fde68a;line-height:1.75">
+              <strong>Cómo configurar Google OAuth (paso a paso):</strong><br>
+              1. Ve a <a href="https://console.cloud.google.com/apis/credentials" target="_blank">console.cloud.google.com → Credenciales</a><br>
+              2. Crea un <strong>ID de cliente OAuth 2.0</strong> → tipo <strong>Aplicación web</strong><br>
+              3. URI de redirección autorizado: <strong>https://digital.raqmiy.com/auth/callback</strong><br>
+              4. Pega el <strong>Client ID</strong> en el campo de abajo y guarda<br>
+              5. El <strong>Client Secret</strong> ponlo en <strong>Cloudflare Pages → Configuración → Variables de entorno → secreto encriptado</strong> con el nombre <code>GOOGLE_CLIENT_SECRET</code><br>
+              6. Añade también: <code>SITE_URL</code> = <strong>https://digital.raqmiy.com</strong>
+            </div>
+            <div class="grid">
+              <label class="full">Google Client ID
+                <input id="googleClientId" type="text" placeholder="123456789-xxxxxxxxxxxxxxxx.apps.googleusercontent.com">
+              </label>
+            </div>
+            <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.28);border-radius:8px;padding:11px 14px;margin-top:10px;font-size:.82rem;color:#fca5a5">
+              ⚠️ <strong>GOOGLE_CLIENT_SECRET</strong> no se guarda aquí por seguridad — ponlo como secreto encriptado en el dashboard de Cloudflare Pages.
+            </div>
+          </div>
+
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
+            <p style="color:var(--text);font-weight:800;margin-bottom:14px">📧 Notificaciones por email (Resend)</p>
+            <div class="grid">
+              <label class="full">Resend API Key
+                <input id="resendApiKey" type="text" placeholder="re_xxxxxxxxxxxxxxxx">
+                <span style="color:var(--muted);font-size:.8rem;font-weight:400">Obtén tu clave en <a href="https://resend.com" target="_blank">resend.com</a> (gratis hasta 3.000 emails/mes)</span>
+              </label>
+              <label class="full">Email del admin (donde recibes las notificaciones)
+                <input id="notifyEmail" type="email" placeholder="tu@email.com">
+              </label>
+            </div>
+          </div>
+
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
+            <p style="color:var(--text);font-weight:800;margin-bottom:12px">🖼️ Subida de imágenes (Cloudinary — gratis)</p>
+            <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.25);border-radius:8px;padding:14px 16px;margin-bottom:14px;font-size:.84rem;color:#fde68a;line-height:1.75">
+              <strong>Cómo configurar Cloudinary (gratis, sin tarjeta):</strong><br>
+              1. Crea cuenta en <a href="https://cloudinary.com/users/register/free" target="_blank" rel="noopener">cloudinary.com</a><br>
+              2. En el dashboard copia tu <strong>Cloud name</strong> (ej: <code>abc123</code>)<br>
+              3. Ve a <strong>Settings → Upload → Upload presets</strong> → <strong>Add upload preset</strong><br>
+              4. Signing mode: <strong>Unsigned</strong> → guarda y copia el nombre del preset<br>
+              5. Pega ambos valores aquí y guarda
+            </div>
+            <div class="grid">
+              <label>Cloud Name
+                <input id="cloudinaryCloudName" type="text" placeholder="ej: abc123xyz">
+              </label>
+              <label>Upload Preset (unsigned)
+                <input id="cloudinaryUploadPreset" type="text" placeholder="ej: raqmiy_products">
+              </label>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="primary" id="save-config" type="button">Guardar cambios</button>
+            <button class="secondary" id="copy-config" type="button">Copiar JSON</button>
+          </div>
+
+          <div class="status" id="config-status" style="margin-top:14px">Introduce la contraseña y pulsa Entrar.</div>
+          <p class="hint">Nunca pongas <strong>sk_live</strong> aquí. La clave secreta de Stripe va solo en Cloudflare Pages como variable <strong>STRIPE_SECRET_KEY</strong>. Para Meta Conversions API, guarda el token como secreto <strong>META_CAPI_ACCESS_TOKEN</strong> en Cloudflare Pages. Para emails necesitas verificar el dominio <strong>digital.raqmiy.com</strong> en Resend.</p>
+        </div>
+      </div>
+    </div>
+    <!-- ===== TAB: MENSAJES ===== -->
+    <div class="tab-panel" id="tab-messages">
+      <div class="msg-toolbar">
+        <strong style="font-size:1.05rem">Mensajes de clientes (<span id="msg-count">0</span>)</strong>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div class="filter-btns">
+            <button class="filter-btn active" data-filter="all" type="button">todos</button>
+            <button class="filter-btn" data-filter="unread" type="button">No leído</button>
+            <button class="filter-btn" data-filter="read" type="button">Legible</button>
+          </div>
+          <button class="secondary" id="refresh-messages" type="button" style="min-height:38px;font-size:.85rem">↺ actualizar</button>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:18px;direction:rtl;text-align:right">
+        <h2 style="font-size:1rem;margin-bottom:10px">Enviar un nuevo mensaje</h2>
+        <div class="grid">
+          <label>Correo del cliente<input id="new-msg-email" type="email" placeholder="client@email.com" dir="ltr" style="text-align:left"></label>
+          <label>Nombre del cliente<input id="new-msg-name" type="text" placeholder="Nombre del cliente"></label>
+          <label class="full">el tema<input id="new-msg-subject" type="text" value="Mensaje de Raqmiy Digital"></label>
+          <label class="full">mensaje<textarea id="new-msg-body" rows="5" placeholder="Escribe tu mensaje aquí en árabe..." style="direction:rtl;text-align:right"></textarea></label>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px">
+          <button class="primary" id="send-new-msg" type="button">enviar mensaje</button>
+          <span id="new-msg-status" style="font-size:.9rem;color:var(--muted)"></span>
+        </div>
+      </div>
+      <div class="msg-list" id="msg-list">
+        <div class="empty-state" style="padding:48px;text-align:center;color:var(--muted)">Ingrese la contraseña de administración, luego presione Enter para ver los mensajes.</div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const CONFIG_FIELDS = [
+      "productName","price","currency","countdownHours","successUrl","downloadUrl",
+      "supportEmail","metaPixelId","gtmId","stripePublishableKey","stripePriceId",
+      "orderBumpEnabled","orderBumpName","orderBumpDescription","orderBumpImageUrl","orderBumpPrice","orderBumpStripePriceId",
+      "upsellEnabled","upsellName","upsellDescription","upsellImageUrl","upsellPrice","upsellStripePriceId",
+      "paypalClientId","paypalClientSecret","paypalMerchantId","notifyEmail","resendApiKey","googleClientId",
+      "cloudinaryCloudName","cloudinaryUploadPreset","cartCampaignMinHours","cartReminderSubject",
+      "cartReminderHeadline","cartReminderBody","cartReminderCta","businessAddress"
+    ];
+    const BOOLEAN_CONFIG_FIELDS = ["orderBumpEnabled", "upsellEnabled"];
+
+    let allOrders = [];
+    const passwordEl = document.getElementById("admin-password");
+    const authStatus = document.getElementById("auth-status");
+    const configStatus = document.getElementById("config-status");
+    const reminderStatus = document.getElementById("reminder-status");
+
+    // Password helpers — URL hash is the most reliable (survives F5 in all browsers)
+    function readStoredPassword() {
+      try { var h = window.location.hash.slice(1); if (h) { var d = atob(h); var hm = d.match(/^ap:(.+)/); if (hm) return hm[1]; } } catch(e) {}
+      try { var lp = localStorage.getItem("adminPassword"); if (lp) return lp; } catch(e) {}
+      try { var sp = sessionStorage.getItem("adminPassword"); if (sp) return sp; } catch(e) {}
+      try { var m = document.cookie.match(/(?:^|;\s*)adminpw=([^;]*)/); if (m) return decodeURIComponent(m[1]); } catch(e) {}
+      try { var wm = (window.name || "").match(/^adminpw:(.+)/); if (wm) return wm[1]; } catch(e) {}
+      return "";
+    }
+    passwordEl.value = readStoredPassword();
+
+    // --- Tabs ---
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+        if (!getPassword()) return;
+        const t = btn.dataset.tab;
+        if (t === "products") loadProducts();
+        else if (t === "orders") loadOrders();
+        else if (t === "carts") loadCarts();
+        else if (t === "messages") loadMessages();
+      });
+    });
+
+    // --- Auth helpers ---
+    function getPassword() { return passwordEl.value.trim(); }
+    function savePassword() {
+      var pw = getPassword();
+      if (!pw) return;
+      var saved = [];
+      try { history.replaceState(null, "", "#" + btoa("ap:" + pw)); saved.push("url"); } catch(e) {}
+      try { localStorage.setItem("adminPassword", pw); saved.push("ls"); } catch(e) {}
+      try { sessionStorage.setItem("adminPassword", pw); saved.push("ss"); } catch(e) {}
+      try { document.cookie = "adminpw=" + encodeURIComponent(pw) + ";path=/;max-age=2592000;SameSite=Lax"; saved.push("cookie"); } catch(e) {}
+      try { window.name = "adminpw:" + pw; saved.push("win"); } catch(e) {}
+      setDebug("contraseña guardada en: " + (saved.length ? saved.join("+") : "¡ninguno!"));
+    }
+
+    function setAuthStatus(msg, type = "") {
+      authStatus.className = "status " + type;
+      authStatus.textContent = msg;
+    }
+    function setConfigStatus(msg, type = "") {
+      configStatus.className = "status " + type;
+      configStatus.textContent = msg;
+    }
+    function setReminderStatus(msg, type = "") {
+      reminderStatus.className = "status " + type;
+      reminderStatus.textContent = msg;
+    }
+
+    // --- Config ---
+    function setForm(config) {
+      CONFIG_FIELDS.forEach((f) => {
+        const el = document.getElementById(f);
+        if (!el) return;
+        if (el.type === "checkbox") el.checked = config[f] === true || config[f] === "true";
+        else el.value = config[f] ?? "";
+      });
+    }
+
+    function getForm() {
+      return CONFIG_FIELDS.reduce((cfg, f) => {
+        const el = document.getElementById(f);
+        const val = el?.value.trim() ?? "";
+        if (BOOLEAN_CONFIG_FIELDS.includes(f)) cfg[f] = el?.checked === true;
+        else cfg[f] = ["price","countdownHours","cartCampaignMinHours","orderBumpPrice","upsellPrice"].includes(f) ? Number(val) : val;
+        return cfg;
+      }, {});
+    }
+
+    function configsMatch(saved, expected) {
+      const important = [
+        "productName", "price", "currency", "downloadUrl", "orderBumpEnabled",
+        "orderBumpName", "orderBumpPrice", "orderBumpImageUrl",
+        "upsellEnabled", "upsellName", "upsellPrice", "upsellImageUrl"
+      ];
+      return important.every((key) => String(saved?.[key] ?? "") === String(expected?.[key] ?? ""));
+    }
+
+    function wait(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    async function verifySavedConfig(expected) {
+      for (let attempt = 1; attempt <= 4; attempt += 1) {
+        await wait(attempt * 900);
+        const verifyRes = await fetch("/api/config?verify=" + Date.now(), { cache: "no-store" });
+        if (!verifyRes.ok) continue;
+        const verified = await verifyRes.json();
+        if (configsMatch(verified, expected)) return verified;
+      }
+      return null;
+    }
+
+    async function loadConfig(options = {}) {
+      const { loadActiveTab = true } = options;
+      savePassword();
+      try {
+        const res = await fetch("/api/config", { cache: "no-store" });
+        const cfg = await res.json();
+        setForm(cfg);
+        setAuthStatus("Configuración cargada.", "ok");
+        setConfigStatus("Configuración cargada. Puedes editar y guardar.", "ok");
+        setReminderStatus("Se han cargado las configuraciones del recordatorio.", "ok");
+        if (loadActiveTab) loadActiveTabData();
+        // Always pre-load products and message badge in background regardless of active tab
+        loadProducts();
+        loadMessages();
+      } catch (err) {
+        setAuthStatus("No se pudo cargar /api/config. Despliega en Cloudflare.", "bad");
+        // Even if config fails, try to load products with saved password
+        loadProducts();
+        loadMessages();
+      }
+    }
+
+    function getActiveTabName() {
+      return document.querySelector(".tab-btn.active")?.dataset.tab || "orders";
+    }
+
+    function loadActiveTabData() {
+      const tab = getActiveTabName();
+      if (tab === "orders") loadOrders();
+      if (tab === "carts") loadCarts();
+      if (tab === "products") loadProducts();
+      if (tab === "messages") loadMessages();
+    }
+
+    async function saveConfig() {
+      const pw = getPassword();
+      if (!pw) { setConfigStatus("Falta la contraseña.", "bad"); return; }
+      savePassword();
+      setConfigStatus("Guardando…");
+      const payload = getForm();
+      try {
+        const res = await fetch("/api/config", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-admin-password": pw },
+          body: JSON.stringify(payload)
+        });
+        const text = await res.text();
+        let result;
+        try { result = JSON.parse(text); } catch {
+          setConfigStatus("HTTP " + res.status + " — Respuesta inválida: " + text.slice(0, 200), "bad"); return;
+        }
+        if (!res.ok) { setConfigStatus("Error " + res.status + ": " + (result.error || "No se pudo guardar."), "bad"); return; }
+        setForm(result.config);
+
+        setConfigStatus("Guardado recibido. Verificando Cloudflare KV...", "");
+        const verified = await verifySavedConfig(payload);
+        if (!verified) {
+          setForm(result.config);
+          setConfigStatus("Guardado aceptado, pero Cloudflare aun devuelve la lectura vieja. Espera 30-60 segundos y pulsa Entrar/Actualizar. No he sobrescrito tus cambios en el formulario.", "ok");
+          return;
+        }
+        setForm(verified);
+        setConfigStatus("Guardado y verificado correctamente. La landing ya leera estos datos.", "ok");
+      } catch (err) {
+        setConfigStatus("Error de red: " + err.message, "bad");
+      }
+    }
+
+    // --- Orders ---
+    async function loadOrders() {
+      const pw = getPassword();
+      if (!pw) return;
+      try {
+        const res = await fetch("/api/orders", {
+          headers: { "x-admin-password": pw },
+          cache: "no-store"
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          updateStats({});
+          renderOrdersError(data.error || `No se pudieron cargar los pedidos. Error ${res.status}.`);
+          return;
+        }
+        allOrders = data.orders || [];
+        updateStats(data.stats || {});
+        renderOrders(allOrders);
+      } catch (err) {
+        updateStats({});
+        renderOrdersError("Error de red al cargar pedidos: " + err.message);
+      }
+    }
+
+    function updateStats(stats) {
+      const fmt = (v) => v !== undefined ? v : "—";
+      document.getElementById("stat-total").textContent = fmt(stats.total);
+      document.getElementById("stat-revenue").textContent = stats.revenue !== undefined
+        ? "$" + stats.revenue.toLocaleString("es-ES", { minimumFractionDigits: 0, maximumFractionDigits: 2 })
+        : "—";
+      document.getElementById("stat-stripe").textContent = fmt(stats.stripe);
+      document.getElementById("stat-paypal").textContent = fmt(stats.paypal);
+    }
+
+    function renderOrders(orders) {
+      const tbody = document.getElementById("orders-body");
+      if (!orders.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No hay pedidos todavía.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = orders.map((o) => {
+        const date = new Date(o.date).toLocaleString("es-ES", { dateStyle: "short", timeStyle: "short" });
+        const amt = o.amount != null
+          ? new Intl.NumberFormat("es-ES", { style: "currency", currency: o.currency || "USD" }).format(o.amount)
+          : "—";
+        const methodBadge = o.method === "stripe"
+          ? '<span class="badge badge-stripe">Stripe</span>'
+          : '<span class="badge badge-paypal">PayPal</span>';
+        const funnelBadges = [
+          o.checkoutType === "upsell" ? '<span class="badge badge-stripe">Upsell</span>' : "",
+          o.orderBump ? '<span class="badge badge-ok">+ Bump</span>' : ""
+        ].filter(Boolean).join(" ");
+        return `<tr>
+          <td><span class="order-num">${o.orderId}</span></td>
+          <td>${date}</td>
+          <td class="amount-cell">${amt}</td>
+          <td>${methodBadge} ${funnelBadges}</td>
+          <td style="color:var(--muted)">${o.email || "—"}</td>
+          <td style="color:var(--muted)">${o.locale || "—"}</td>
+          <td><span class="badge badge-ok">✓ Completado</span></td>
+        </tr>`;
+      }).join("");
+    }
+
+    function renderOrdersError(message) {
+      allOrders = [];
+      const tbody = document.getElementById("orders-body");
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-state">${escHtml(message)}</td></tr>`;
+    }
+
+    function filterOrders() {
+      const q = document.getElementById("search-orders").value.toLowerCase();
+      if (!q) { renderOrders(allOrders); return; }
+      renderOrders(allOrders.filter((o) =>
+        (o.orderId || "").toLowerCase().includes(q) ||
+        (o.email || "").toLowerCase().includes(q) ||
+        (o.method || "").toLowerCase().includes(q) ||
+        (o.checkoutType || "").toLowerCase().includes(q) ||
+        (o.orderBumpName || "").toLowerCase().includes(q)
+      ));
+    }
+
+    function exportCsv() {
+      if (!allOrders.length) return;
+      const headers = ["Nº Pedido","Fecha","Importe","Moneda","Método","Tipo checkout","Order bump","Nombre bump","Email","Idioma","Estado"];
+      const rows = allOrders.map((o) => [
+        o.orderId, o.date, o.amount, o.currency, o.method, o.checkoutType || "main", o.orderBump ? "si" : "no", o.orderBumpName || "", o.email || "", o.locale || "", o.status
+      ].map((v) => `"${String(v ?? "").replace(/"/g,'""')}"`).join(","));
+      const csv = [headers.join(","), ...rows].join("\n");
+      const a = document.createElement("a");
+      a.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+      a.download = "pedidos-digital-pack.csv";
+      a.click();
+    }
+
+    // --- Carts ---
+    let allCarts = [];
+    let recoveredCarts = [];
+    let cartFilter = "abandoned";
+
+    async function loadCarts() {
+      const pw = getPassword();
+      if (!pw) return;
+      setCartStatus("Cargando cestas…");
+      try {
+        const res = await fetch("/api/carts", { headers: { "x-admin-password": pw }, cache: "no-store" });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) { setCartStatus("error: " + (data.error || "No se pueden cargar cestas."), "bad"); return; }
+        allCarts = data.carts || [];
+        recoveredCarts = data.recovered || [];
+        updateCartStats(data.stats || {});
+        renderCarts();
+        setCartStatus("Las cestas se han actualizado..", "ok");
+        setCampaignStatus((data.stats?.campaignEligible || 0) + " Cesta elegible para la próxima campaña.", "ok");
+      } catch (err) {
+        setCartStatus("error de red: " + err.message, "bad");
+      }
+    }
+
+    function updateCartStats(stats) {
+      document.getElementById("cart-stat-abandoned").textContent = stats.abandoned ?? "—";
+      document.getElementById("cart-stat-recovered").textContent = stats.recovered ?? "—";
+      document.getElementById("cart-stat-reminders").textContent = stats.remindersSent ?? "—";
+      document.getElementById("cart-stat-eligible").textContent = stats.campaignEligible ?? "—";
+    }
+
+    function renderCarts() {
+      const tbody = document.getElementById("carts-body");
+      const carts = cartFilter === "recovered" ? recoveredCarts : allCarts;
+      if (!carts.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No hay cestas en esta lista..</td></tr>';
+        return;
+      }
+      tbody.innerHTML = carts.map((cart) => {
+        const dateValue = cartFilter === "recovered" ? cart.recoveredAt : (cart.updatedAt || cart.date);
+        const date = dateValue ? new Date(dateValue).toLocaleString("ar", { dateStyle: "short", timeStyle: "short" }) : "—";
+        const status = cartFilter === "recovered"
+          ? '<span class="badge badge-ok">✓ Recuperado</span>'
+          : cart.unsubscribed
+            ? '<span class="badge badge-paypal">Darse de baja</span>'
+            : cart.manualReminderSentAt
+              ? '<span class="badge badge-stripe">El recordatorio ha sido enviado.</span>'
+              : '<span class="badge badge-paypal">Abandonado</span>';
+        const action = cartFilter === "recovered"
+          ? `<span class="order-num">${escHtml(cart.orderId || "—")}</span>`
+          : cart.unsubscribed || cart.manualReminderSentAt
+            ? '<span style="color:var(--muted)">Ninguna acción</span>'
+            : `<button class="primary send-cart-reminder-btn" type="button" data-email="${escAttr(cart.email)}" style="min-height:34px;padding:4px 10px;font-size:.78rem">enviar un recordatorio</button>`;
+        return `<tr><td>${date}</td><td style="direction:ltr;text-align:left;color:var(--muted)">${escHtml(cart.email || "—")}</td><td>${status}</td><td>${action}</td></tr>`;
+      }).join("");
+    }
+
+    async function saveReminderSettings() {
+      if (!document.getElementById("businessAddress").value.trim()) {
+        setReminderStatus("Agregue la dirección postal de su empresa antes de guardar.", "bad");
+        document.getElementById("businessAddress").focus();
+        return;
+      }
+      await saveConfig();
+      setReminderStatus("La configuración del recordatorio se ha guardado..", "ok");
+    }
+
+    async function sendCartReminder(email, button) {
+      if (!document.getElementById("businessAddress").value.trim()) {
+        setCartStatus("Primero agregue la dirección postal de su empresa en la pestaña Recordatorios..", "bad");
+        document.querySelector('.tab-btn[data-tab="reminders"]').click();
+        document.getElementById("businessAddress").focus();
+        return;
+      }
+      if (!confirm("Enviar un recordatorio a " + email + "؟")) return;
+      button.disabled = true;
+      button.textContent = "Envío…";
+      try {
+        const res = await fetch("/api/carts", { method: "POST", headers: { "Content-Type": "application/json", "x-admin-password": getPassword() }, body: JSON.stringify({ action: "send-reminder", email }) });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) { setCartStatus("error: " + (data.error || "No se pudo enviar el recordatorio.."), "bad"); return; }
+        setCartStatus("El recordatorio ha sido enviado a " + email + ".", "ok");
+        await loadCarts();
+      } catch (err) { setCartStatus("error de red: " + err.message, "bad"); }
+      finally { button.disabled = false; button.textContent = "enviar un recordatorio"; }
+    }
+
+    async function sendCartCampaign() {
+      const eligible = Number(document.getElementById("cart-stat-eligible").textContent) || 0;
+      if (!document.getElementById("businessAddress").value.trim()) { setCampaignStatus("Agregue primero la dirección postal de su empresa.", "bad"); return; }
+      if (!eligible) { setCampaignStatus("No hay cestas elegibles para ser enviadas..", "bad"); return; }
+      if (!confirm("Enviar campaña a " + eligible + " ¿Cesta elegible?")) return;
+      const button = document.getElementById("send-cart-campaign");
+      button.disabled = true;
+      button.textContent = "Envío…";
+      try {
+        const res = await fetch("/api/carts", { method: "POST", headers: { "Content-Type": "application/json", "x-admin-password": getPassword() }, body: JSON.stringify({ action: "send-campaign" }) });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) { setCampaignStatus("error: " + (data.error || "La campaña no se pudo enviar.."), "bad"); return; }
+        setCampaignStatus("La campaña ha sido procesada.: " + (data.sent || 0) + " remitente, " + (data.skipped || 0) + " improbable, " + (data.errors || 0) + " errores.", data.errors ? "bad" : "ok");
+        await loadCarts();
+      } catch (err) { setCampaignStatus("error de red: " + err.message, "bad"); }
+      finally { button.disabled = false; button.textContent = "Enviar la campaña a personas elegibles"; }
+    }
+
+    function setCartStatus(msg, type = "") { const el = document.getElementById("cart-status"); el.className = "status " + type; el.textContent = msg; }
+    function setCampaignStatus(msg, type = "") { const el = document.getElementById("campaign-status"); el.className = "status " + type; el.textContent = msg; }
+
+    async function recoverPaypalOrder() {
+      const pw = getPassword();
+      if (!pw) return;
+      const status = document.getElementById("recover-status");
+      const btn = document.getElementById("recover-paypal-btn");
+      const email = document.getElementById("recover-email").value.trim();
+      const paypalOrderId = document.getElementById("recover-paypal-id").value.trim();
+      const amount = document.getElementById("recover-amount").value.trim();
+      const currency = document.getElementById("recover-currency").value.trim().toUpperCase();
+      if (!email) {
+        status.textContent = "Escribe el email del cliente.";
+        status.style.color = "#fecaca";
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = "Enviando...";
+      status.textContent = "Creando pedido y enviando email...";
+      status.style.color = "var(--muted)";
+      try {
+        const res = await fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-admin-password": pw },
+          body: JSON.stringify({
+            action: "recover-paypal",
+            email,
+            paypalOrderId,
+            amount: amount ? Number(amount) : undefined,
+            currency: currency || undefined,
+            locale: "ar"
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) {
+          throw new Error(data.error || "No se pudo recuperar el pedido.");
+        }
+        const bits = [`Pedido ${data.orderId} creado`];
+        bits.push(data.emailSent ? "email enviado" : "email no enviado: " + (data.emailWarning || "configura Resend"));
+        if (data.downloadUrl) bits.push(`<a href="${escAttr(data.downloadUrl)}" target="_blank" rel="noopener" style="color:#fbbf24">descarga</a>`);
+        if (data.invoiceUrl) bits.push(`<a href="${escAttr(data.invoiceUrl)}" target="_blank" rel="noopener" style="color:#fbbf24">factura/acceso</a>`);
+        status.innerHTML = bits.join(" · ");
+        status.style.color = data.emailSent ? "#bbf7d0" : "#fde68a";
+        document.getElementById("recover-email").value = "";
+        document.getElementById("recover-paypal-id").value = "";
+        await loadOrders();
+      } catch (err) {
+        status.textContent = err.message || "Error de red.";
+        status.style.color = "#fecaca";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Enviar acceso al cliente";
+      }
+    }
+
+    // --- Events ---
+    document.getElementById("load-btn").addEventListener("click", loadConfig);
+    document.getElementById("save-config").addEventListener("click", saveConfig);
+    document.getElementById("refresh-orders").addEventListener("click", loadOrders);
+    document.getElementById("export-csv").addEventListener("click", exportCsv);
+    document.getElementById("recover-paypal-btn").addEventListener("click", recoverPaypalOrder);
+    document.getElementById("refresh-carts").addEventListener("click", loadCarts);
+    document.getElementById("save-reminder").addEventListener("click", saveReminderSettings);
+    document.getElementById("send-cart-campaign").addEventListener("click", sendCartCampaign);
+    document.getElementById("carts-body").addEventListener("click", (e) => {
+      const button = e.target.closest(".send-cart-reminder-btn");
+      if (button) sendCartReminder(button.dataset.email, button);
+    });
+    document.querySelectorAll(".cart-filter-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".cart-filter-btn").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        cartFilter = button.dataset.cartFilter;
+        renderCarts();
+      });
+    });
+    document.getElementById("search-orders").addEventListener("input", filterOrders);
+    document.getElementById("copy-config").addEventListener("click", async () => {
+      await navigator.clipboard.writeText(JSON.stringify(getForm(), null, 2));
+      setConfigStatus("JSON copiado.", "ok");
+    });
+
+    // Auto-load: poll for password (catches readStoredPassword + late browser autofill)
+    var _started = false;
+    function autoStart() {
+      if (_started || !getPassword()) return;
+      _started = true;
+      loadConfig().catch(function() {
+        setAuthStatus("No se pudo cargar /api/config.", "bad");
+        loadProducts();
+      });
+    }
+    // Poll every 200ms for up to 3s — fires as soon as password field has a value
+    var _poll = setInterval(function() { if (getPassword()) { clearInterval(_poll); autoStart(); } }, 200);
+    setTimeout(function() { clearInterval(_poll); }, 3000);
+    // Staggered retries if products still empty after login
+    [3000, 8000, 18000].forEach(function(ms) {
+      setTimeout(function() { if (getPassword() && allProducts.length === 0) loadProducts(); }, ms);
+    });
+
+    // ===== PRODUCTS =====
+    let allProducts = [];
+    const DEFAULT_ADMIN_CATEGORIES = [
+      "Canva Templates",
+      "Design",
+      "Ebook",
+      "Video",
+      "Audio",
+      "Software",
+      "Social Media",
+      "Marketing",
+      "Otros"
+    ];
+    let allCategories = [...DEFAULT_ADMIN_CATEGORIES];
+    let editingProductId = null;
+
+    const CATEGORY_COLORS = {
+      "Canva Templates": "#8b5cf6",
+      "Design":          "#3b82f6",
+      "Ebook":           "#f97316",
+      "Video":           "#ef4444",
+      "Audio":           "#ec4899",
+      "Software":        "#06b6d4",
+      "Social Media":    "#10b981",
+      "Marketing":       "#f59e0b",
+      "Otros":           "#6b7280"
+    };
+
+    const PRODUCT_COPY_RULES = [
+      {
+        keywords: ["dinosaurio", "dinosaurios", "historias", "niños", "niños", "colorante", "Cuentos"],
+        title: "Cuentos y artículos infantiles listos para imprimir y vender.",
+        desc: "Contenido divertido para niños que se puede utilizar como libro digital, archivo imprimible o producto educativo vendido directamente.."
+      },
+      {
+        keywords: ["un plan", "planner", "digital planner", "2026", "2027", "2028"],
+        title: "Planificador digital profesional para organizar la vida y el trabajo.",
+        desc: "Plantillas de planificación diaria, semanal y anual listas para editar y vender a una audiencia interesada en la productividad y la organización.."
+      },
+      {
+        keywords: ["ai-vlogs", "vlog", "tutorial"],
+        title: "guía para hacer videos AI Vlogs Atractivo",
+        desc: "Aprenda cómo convertir ideas simples en videos cortos llamativos utilizando herramientas de inteligencia artificial.."
+      },
+      {
+        keywords: ["super ai", "prompt", "prompts", "Comandos", "Inmediato", "ingeniería"],
+        title: "Paquete de comandos de IA para una creación de contenido más rápida",
+        desc: "La creación de prototipos listos para usar lo ayuda a escribir, diseñar y comercializar contenido digital de manera profesional y en menos tiempo.."
+      },
+      {
+        keywords: ["Camiseta", "t-shirt", "tshirt", "shirt", "design"],
+        title: "Diseños de camisetas listos para imprimir y vender.",
+        desc: "Archivos de diseño utilizables en impresión bajo demanda, tiendas digitales y campañas de productos de temporada.."
+      },
+      {
+        keywords: ["Voces", "Voces", "sound", "halal", "audio"],
+        title: "Los sonidos son halal para edición y contenido comercial.",
+        desc: "Efectos y archivos de audio adecuados para vídeos, anuncios y proyectos que necesitan un sonido limpio y listo.."
+      },
+      {
+        keywords: ["reels", "Rieles", "video", "video", "100 mil", "100k"],
+        title: "Su videoteca de Rails está lista para publicarse",
+        desc: "Clips cortos que te ayudan a crear contenido rápido para cortos de Instagram, TikTok y YouTube sin filmar desde cero.."
+      },
+      {
+        keywords: ["canva", "Lienzo", "Páginas de destino", "landing", "templates", "Plantillas"],
+        title: "Plantillas Canva Páginas de destino listas para ser modificadas",
+        desc: "Diseños profesionales que puedes modificar con tu identidad y utilizar para ofertas, anuncios, tiendas o clientes.."
+      },
+      {
+        keywords: ["ebook", "book", "libro", "libros", "pdf"],
+        title: "Libros digitales listos para ser reempaquetados y vendidos.",
+        desc: "Archivos editables que le ayudan a crear rápidamente productos digitales o recompensas dentro de su oferta.."
+      }
+    ];
+
+    const CATEGORY_COPY = {
+      "Canva Templates": {
+        title: "Plantillas Canva Listo para modificar y vender.",
+        desc: "Los diseños personalizables le ayudan a lanzar ofertas y productos rápidamente con una interfaz profesional."
+      },
+      "Design": {
+        title: "Diseños digitales listos para uso comercial.",
+        desc: "Archivos de diseño que puedes modificar, reempaquetar o usar en tus productos y tienda.."
+      },
+      "Ebook": {
+        title: "Un libro digital que se puede editar y revender",
+        desc: "Contenido listo para usar que se puede convertir en un producto independiente, bonificación o material educativo dentro de su oferta.."
+      },
+      "Video": {
+        title: "Vídeos listos para contenido y anuncios.",
+        desc: "Los clips te ayudan a publicar y crear presentaciones visuales rápidamente sin tener que producir un vídeo desde cero.."
+      },
+      "Audio": {
+        title: "Archivos de audio listos para usar para proyectos digitales.",
+        desc: "Sonidos y efectos adecuados para vídeos, lecciones, anuncios y contenido comercial.."
+      },
+      "Marketing": {
+        title: "Materiales de marketing listos para vender sus productos.",
+        desc: "Archivos que te ayudan a explicar la oferta, atraer al cliente y convertir el interés en una compra.."
+      },
+      "Social Media": {
+        title: "Contenido de redes sociales listo para ser publicado.",
+        desc: "Plantillas e ideas que te ayudarán a construir una presencia diaria y atraer una audiencia interesada en tus productos.."
+      }
+    };
+
+    function normalizeCopyText(value) {
+      return String(value || "").toLowerCase();
+    }
+
+    function getProductCopy(product) {
+      const originalName = String(product.name || "").trim();
+      const originalDesc = String(product.description || "").trim();
+      const category = String(product.category || "").trim();
+      const haystack = normalizeCopyText(`${originalName} ${originalDesc} ${category}`);
+      const matched = PRODUCT_COPY_RULES.find((rule) =>
+        rule.keywords.some((keyword) => haystack.includes(normalizeCopyText(keyword)))
+      );
+      const categoryCopy = CATEGORY_COPY[category];
+      return {
+        title: matched?.title || originalName || categoryCopy?.title || "Un producto digital listo para vender",
+        desc: originalDesc || matched?.desc || categoryCopy?.desc || "Un producto digital listo para usar que lo ayuda a comenzar a vender o agregar valor a su oferta sin tener que hacerlo todo desde cero.."
+      };
+    }
+
+    function getAccessLabel(level) {
+      const value = String(level || "main").toLowerCase();
+      if (value === "bump") return "Order bump";
+      if (value === "upsell") return "Upsell";
+      return "Principal";
+    }
+
+    function getAccessColor(level) {
+      const value = String(level || "main").toLowerCase();
+      if (value === "bump") return "#38bdf8";
+      if (value === "upsell") return "#c084fc";
+      return "#86efac";
+    }
+
+    function setProdStatus(msg, type = "") {
+      const el = document.getElementById("prod-form-status");
+      el.className = "prod-status " + type;
+      el.textContent = msg;
+    }
+
+    function setDebug(msg) {
+      var el = document.getElementById("prod-debug");
+      if (el) el.textContent = "[v7] " + msg;
+    }
+
+    function saveProductsCache(products, categories, options = {}) {
+      try {
+        const nextProducts = Array.isArray(products) ? products : [];
+        if (!options.allowEmpty && nextProducts.length === 0) {
+          const cached = JSON.parse(localStorage.getItem("admin_products_v1") || "null");
+          if (Array.isArray(cached) && cached.length > 0) return;
+        }
+        localStorage.setItem("admin_products_v1", JSON.stringify(nextProducts));
+        if (categories) localStorage.setItem("admin_categories_v1", JSON.stringify(categories));
+      } catch (e) {}
+    }
+
+    function setProductsFromServer(products, categories, options = {}) {
+      const nextProducts = Array.isArray(products) ? products : [];
+      const allowEmpty = options.allowEmpty === true;
+
+      if (nextProducts.length === 0 && allProducts.length > 0 && !allowEmpty) {
+        if (Array.isArray(categories) && categories.length > 0) {
+          allCategories = categories;
+          renderCategoryOptions();
+          renderCategoryList();
+        }
+        return false;
+      }
+
+      allProducts = nextProducts;
+      if (Array.isArray(categories) && categories.length > 0) allCategories = categories;
+      saveProductsCache(allProducts, allCategories, { allowEmpty });
+      renderCategoryOptions();
+      renderCategoryList();
+      renderProducts(allProducts);
+      return true;
+    }
+
+    function upsertProduct(product, categories) {
+      if (!product || !product.id) return false;
+      const idx = allProducts.findIndex((p) => p.id === product.id);
+      if (idx === -1) allProducts = [product, ...allProducts];
+      else allProducts = allProducts.map((p) => p.id === product.id ? product : p);
+      if (Array.isArray(categories) && categories.length > 0) allCategories = categories;
+      saveProductsCache(allProducts, allCategories);
+      renderCategoryOptions();
+      renderCategoryList();
+      renderProducts(allProducts);
+      return true;
+    }
+
+    async function loadProducts() {
+      const pw = getPassword();
+      if (!pw) {
+        setProdStatus("Introduce la contraseña y pulsa Entrar para ver editar productos y categorías.", "");
+        const tb = document.getElementById("prod-table-body");
+        if (tb) tb.innerHTML = '<tr><td colspan="5" class="empty-state">Introduce la contraseña y pulsa Entrar.</td></tr>';
+        renderCategoryOptions("Otros");
+        renderCategoryList();
+        return;
+      }
+      // Show cached products instantly while the API request is in flight
+      try {
+        const cachedProds = JSON.parse(localStorage.getItem("admin_products_v1") || "null");
+        const cachedCats  = JSON.parse(localStorage.getItem("admin_categories_v1") || "null");
+        if (Array.isArray(cachedProds) && cachedProds.length > 0) {
+          allProducts  = cachedProds;
+          if (Array.isArray(cachedCats) && cachedCats.length > 0) allCategories = cachedCats;
+          renderCategoryOptions();
+          renderCategoryList();
+          renderProducts(allProducts);
+          setProdStatus("Actualizando…", "");
+        }
+      } catch (e) {}
+      try {
+        const res = await fetch("/api/products", {
+          headers: { "x-admin-password": pw },
+          cache: "no-store"
+        });
+        if (!res.ok) { setProdStatus("Error " + res.status + " al cargar productos. Comprueba la contraseña.", "bad"); return; }
+        const data = await res.json();
+        const fresh = data.products || [];
+
+        if (fresh.length > 0) {
+          allProducts   = fresh;
+          allCategories = data.categories || [];
+          saveProductsCache(allProducts, allCategories);
+          renderCategoryOptions();
+          renderCategoryList();
+          renderProducts(allProducts);
+          setProdStatus("✓ " + allProducts.length + " productos cargados.", "ok");
+          setDebug("API: " + fresh.length + " productos ✓ | " + new Date().toLocaleTimeString());
+        } else if (allProducts.length > 0) {
+          if (data.categories && data.categories.length > 0) {
+            allCategories = data.categories;
+            renderCategoryOptions();
+            renderCategoryList();
+          }
+          setProdStatus("✓ " + allProducts.length + " productos cargados.", "ok");
+          setDebug("API: 0 (KV delay) — mostrando caché: " + allProducts.length + " | " + new Date().toLocaleTimeString());
+        } else {
+          allCategories = data.categories || [];
+          renderCategoryOptions();
+          renderCategoryList();
+          renderProducts([]);
+          setProdStatus("No se encontraron productos. Pulsa ↺ Actualizar para recuperarlos.", "bad");
+          setDebug("API: 0 | caché: 0 | contraseña: " + (pw ? "guardada" : "NO") + " | " + new Date().toLocaleTimeString());
+        }
+      } catch (err) {
+        if (allProducts.length > 0) {
+          setProdStatus("✓ " + allProducts.length + " productos (sin conexión).", "ok");
+        } else {
+          setProdStatus("Error de red: " + err.message, "bad");
+        }
+      }
+    }
+
+    let prodView = "table";
+
+    function renderProducts(products) {
+      const grid = document.getElementById("prod-grid");
+      const tbody = document.getElementById("prod-table-body");
+      const tableWrap = document.getElementById("prod-table-wrap");
+      
+      document.getElementById("prod-count").textContent = products.length;
+      
+      // Toggle views (movido arriba para asegurar que los estilos de visualización se aplican siempre)
+      if (prodView === "table") {
+        grid.style.display = "none";
+        tableWrap.style.display = "block";
+      } else {
+        grid.style.display = "grid";
+        tableWrap.style.display = "none";
+      }
+
+      if (!products.length) {
+        const emptyMsg = 'No hay productos todavía. Añade el primero.';
+        grid.innerHTML = `<div class="prod-grid-empty">${emptyMsg}</div>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="empty-state">${emptyMsg}</td></tr>`;
+        return;
+      }
+
+      if (prodView === "grid") {
+        tbody.innerHTML = "";
+        grid.innerHTML = products.map((p) => {
+          const color = CATEGORY_COLORS[p.category] || "#6b7280";
+          const accessColor = getAccessColor(p.accessLevel);
+          const copy = getProductCopy(p);
+          const img = p.imageUrl
+            ? `<img src="${escHtml(p.imageUrl)}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+            : "";
+          const placeholder = `<div class="prod-card-no-img" style="${p.imageUrl ? "display:none" : ""}">📦</div>`;
+          return `<div class="prod-card">
+            ${img}${placeholder}
+            <div class="prod-card-body">
+              <span class="prod-card-cat" style="background:${color}22;color:${color};border-color:${color}44">${escHtml(p.category)}</span>
+              <span class="prod-card-cat" style="background:${accessColor}22;color:${accessColor};border-color:${accessColor}44">${escHtml(getAccessLabel(p.accessLevel))}</span>
+              <div class="prod-card-name">${escHtml(copy.title)}</div>
+              <div style="font-size:.78rem;color:var(--muted);line-height:1.4">${escHtml(copy.desc.slice(0, 90))}${copy.desc.length > 90 ? "…" : ""}</div>
+              <div class="prod-card-actions">
+                <a href="${escHtml(p.downloadUrl)}" target="_blank" rel="noopener">
+                  <button class="secondary" type="button" style="width:100%;min-height:32px;padding:4px 10px;font-size:.8rem">🔗 Ver</button>
+                </a>
+                <button class="secondary edit-product-btn" type="button" data-id="${escAttr(p.id)}" title="Editar producto">✎ Editar</button>
+                <button class="danger delete-product-btn" type="button" data-id="${escAttr(p.id)}">Borrar</button>
+              </div>
+            </div>
+          </div>`;
+        }).join("");
+        return;
+      }
+
+      grid.innerHTML = "";
+      tbody.innerHTML = products.map((p) => {
+        const color = CATEGORY_COLORS[p.category] || "#6b7280";
+        const accessColor = getAccessColor(p.accessLevel);
+        const copy = getProductCopy(p);
+        const img = p.imageUrl 
+          ? `<img src="${escHtml(p.imageUrl)}" loading="lazy" decoding="async" style="width:40px;height:40px;border-radius:4px;object-fit:cover;background:#1a1a22" alt="">`
+          : `<div style="width:40px;height:40px;border-radius:4px;background:#1a1a22;display:flex;align-items:center;justify-content:center;font-size:1.2rem">📦</div>`;
+        const activeBadge = p.active !== false 
+          ? `<span class="badge badge-ok">Visible</span>`
+          : `<span class="badge" style="background:rgba(239,68,68,.12);color:#fca5a5;border:1px solid rgba(239,68,68,.28)">Oculto</span>`;
+          
+        return `<tr>
+          <td style="width:60px">${img}</td>
+          <td>
+            <div style="font-weight:800;max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(copy.title)}</div>
+            <div style="font-size:.76rem;color:var(--muted);max-width:420px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(copy.desc)}</div>
+          </td>
+          <td><span class="prod-card-cat" style="background:${color}22;color:${color};border-color:${color}44;padding:2px 8px;font-size:.7rem">${escHtml(p.category)}</span></td>
+          <td><span class="prod-card-cat" style="background:${accessColor}22;color:${accessColor};border-color:${accessColor}44;padding:2px 8px;font-size:.7rem">${escHtml(getAccessLabel(p.accessLevel))}</span></td>
+          <td>${activeBadge}</td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <button class="secondary edit-product-btn" type="button" data-id="${escAttr(p.id)}" style="min-height:32px;padding:4px 10px;font-size:.8rem">✎ Editar</button>
+              <button class="danger delete-product-btn" type="button" data-id="${escAttr(p.id)}" style="min-height:32px;padding:4px 10px;font-size:.8rem">Borrar</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join("");
+    }
+
+    function renderCategoryOptions(selected = "") {
+      const select = document.getElementById("prod-category");
+      const value = selected || select.value || "Otros";
+      select.innerHTML = allCategories.map((cat) =>
+        `<option value="${escAttr(cat)}">${escHtml(cat)}</option>`
+      ).join("");
+      if (allCategories.includes(value)) select.value = value;
+      else if (allCategories.includes("Otros")) select.value = "Otros";
+    }
+
+    function renderCategoryList() {
+      const list = document.getElementById("cat-list");
+      if (!allCategories.length) {
+        list.innerHTML = '<span style="color:var(--muted);font-size:.82rem">No hay categorías todavía.</span>';
+        return;
+      }
+      list.innerHTML = allCategories.map((cat) => `
+        <span class="cat-chip">
+          ${escHtml(cat)}
+          <button class="edit-category-btn" type="button" data-category="${escAttr(cat)}" title="Renombrar categoría">✎</button>
+          <button class="delete-category-btn" type="button" data-category="${escAttr(cat)}" title="Borrar categoría">×</button>
+        </span>
+      `).join("");
+    }
+
+    function resetProductForm() {
+      editingProductId = null;
+      ["prod-name","prod-image","prod-download","prod-description"].forEach((id) => {
+        document.getElementById(id).value = "";
+      });
+      document.getElementById("prod-image-url").value = "";
+      setImgPreview("");
+      setImgStatus("");
+      setImgMode("upload");
+      document.getElementById("prod-active").checked = true;
+      document.getElementById("prod-access").value = "main";
+      document.getElementById("prod-form-title").textContent = "Añadir producto";
+      document.getElementById("save-product-btn").textContent = "Añadir producto";
+      document.getElementById("cancel-edit-btn").style.display = "none";
+      renderCategoryOptions("Otros");
+    }
+
+    function editProduct(id) {
+      const product = allProducts.find((p) => p.id === id);
+      if (!product) return;
+      editingProductId = id;
+      document.getElementById("prod-name").value = product.name || "";
+      const _imgUrl = product.imageUrl || "";
+      document.getElementById("prod-image").value = _imgUrl;
+      document.getElementById("prod-image-url").value = _imgUrl;
+      setImgPreview(_imgUrl);
+      setImgStatus(_imgUrl ? "Imagen actual." : "");
+      setImgMode(_imgUrl ? "url" : "upload");
+      document.getElementById("prod-download").value = product.downloadUrl || "";
+      document.getElementById("prod-description").value = product.description || "";
+      document.getElementById("prod-active").checked = product.active !== false;
+      document.getElementById("prod-access").value = product.accessLevel || "main";
+      document.getElementById("prod-form-title").textContent = "Editar producto";
+      document.getElementById("save-product-btn").textContent = "Guardar cambios";
+      document.getElementById("cancel-edit-btn").style.display = "";
+      renderCategoryOptions(product.category || "Otros");
+      setProdStatus("Editando: " + (product.name || "producto"), "");
+      document.getElementById("tab-products").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    async function saveProduct() {
+      const pw = getPassword();
+      if (!pw) { setProdStatus("Introduce la contraseña y pulsa Entrar.", "bad"); return; }
+      const name = document.getElementById("prod-name").value.trim();
+      const downloadUrl = document.getElementById("prod-download").value.trim();
+      if (!name) { setProdStatus("El nombre es obligatorio.", "bad"); return; }
+      if (!downloadUrl) { setProdStatus("La URL de descarga es obligatoria.", "bad"); return; }
+      setProdStatus(editingProductId ? "Guardando cambios…" : "Añadiendo…");
+      try {
+        const url = editingProductId ? "/api/products?id=" + encodeURIComponent(editingProductId) : "/api/products";
+        const res = await fetch(url, {
+          method: editingProductId ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json", "x-admin-password": pw },
+          body: JSON.stringify({
+            name,
+            category: document.getElementById("prod-category").value,
+            accessLevel: document.getElementById("prod-access").value,
+            imageUrl: document.getElementById("prod-image").value.trim(),
+            downloadUrl,
+            description: document.getElementById("prod-description").value.trim(),
+            active: document.getElementById("prod-active").checked
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) { setProdStatus("Error: " + (data.error || res.status), "bad"); return; }
+        setProdStatus(editingProductId ? "Producto actualizado correctamente." : "Producto añadido correctamente.", "ok");
+        resetProductForm();
+        
+        if (Array.isArray(data.products) && data.products.length > 0) {
+          setProductsFromServer(data.products, data.categories);
+        } else if (data.product) {
+          upsertProduct(data.product, data.categories);
+        } else if (Array.isArray(data.products)) {
+          setProductsFromServer(data.products, data.categories);
+        } else {
+          await loadProducts();
+        }
+      } catch (err) {
+        setProdStatus("Error de red: " + err.message, "bad");
+      }
+    }
+
+    async function deleteProduct(id, name) {
+      if (!confirm(`¿Eliminar "${name}"? Esta acción no se puede deshacer.`)) return;
+      const pw = getPassword();
+      if (!pw) { setProdStatus("Introduce la contraseña y pulsa Entrar.", "bad"); return; }
+      try {
+        const res = await fetch("/api/products?id=" + encodeURIComponent(id), {
+          method: "DELETE",
+          headers: { "x-admin-password": pw }
+        });
+        const data = await res.json();
+        if (!res.ok) { setProdStatus("Error al borrar: " + (data.error || res.status), "bad"); return; }
+        setProdStatus("Producto eliminado.", "ok");
+        if (Array.isArray(data.products)) {
+          setProductsFromServer(data.products, data.categories, { allowEmpty: true });
+        } else {
+          await loadProducts();
+        }
+      } catch (err) {
+        setProdStatus("Error de red: " + err.message, "bad");
+      }
+    }
+
+    async function addCategory() {
+      const pw = getPassword();
+      if (!pw) { setProdStatus("Introduce la contraseña y pulsa Entrar.", "bad"); return; }
+      const name = document.getElementById("new-category").value.trim();
+      if (!name) { setProdStatus("Escribe el nombre de la categoría.", "bad"); return; }
+      try {
+        const res = await fetch("/api/products", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-admin-password": pw },
+          body: JSON.stringify({ type: "category", name })
+        });
+        const data = await res.json();
+        if (!res.ok) { setProdStatus("Error: " + (data.error || res.status), "bad"); return; }
+        allCategories = data.categories || allCategories;
+        if (Array.isArray(data.products)) {
+          setProductsFromServer(data.products, allCategories);
+        }
+        document.getElementById("new-category").value = "";
+        renderCategoryOptions(name);
+        renderCategoryList();
+        setProdStatus("Categoría añadida.", "ok");
+      } catch (err) {
+        setProdStatus("Error de red: " + err.message, "bad");
+      }
+    }
+
+    async function deleteCategory(category) {
+      if (!confirm(`¿Eliminar la categoría "${category}"? Los productos que la usan pasarán a "Sin categoría".`)) return;
+      const pw = getPassword();
+      if (!pw) { setProdStatus("Introduce la contraseña y pulsa Entrar.", "bad"); return; }
+      try {
+        const res = await fetch("/api/products?category=" + encodeURIComponent(category) + "&fallback=" + encodeURIComponent("Sin categoría"), {
+          method: "DELETE",
+          headers: { "x-admin-password": pw }
+        });
+        const data = await res.json();
+        if (!res.ok) { setProdStatus("Error al borrar categoría: " + (data.error || res.status), "bad"); return; }
+        allCategories = data.categories || allCategories.filter((cat) => cat !== category);
+        if (Array.isArray(data.products)) {
+          setProductsFromServer(data.products, allCategories);
+        } else {
+          await loadProducts();
+        }
+        setProdStatus("Categoría eliminada. Productos movidos a Sin categoría.", "ok");
+      } catch (err) {
+        setProdStatus("Error de red: " + err.message, "bad");
+      }
+    }
+
+    async function renameCategory(category) {
+      const pw = getPassword();
+      if (!pw) { setProdStatus("Introduce la contraseña y pulsa Entrar.", "bad"); return; }
+      const nextName = prompt("Nuevo nombre para la categoría:", category);
+      if (nextName === null) return;
+      const cleanName = nextName.trim();
+      if (!cleanName) { setProdStatus("El nombre de la categoría no puede estar vacío.", "bad"); return; }
+      if (cleanName === category) return;
+      try {
+        const res = await fetch("/api/products", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json", "x-admin-password": pw },
+          body: JSON.stringify({ type: "category", from: category, to: cleanName })
+        });
+        const data = await res.json();
+        if (!res.ok) { setProdStatus("Error al renombrar: " + (data.error || res.status), "bad"); return; }
+        allCategories = data.categories || allCategories;
+        if (Array.isArray(data.products)) {
+          setProductsFromServer(data.products, allCategories);
+        } else {
+          await loadProducts();
+        }
+        setProdStatus("Categoría renombrada. Productos actualizados.", "ok");
+      } catch (err) {
+        setProdStatus("Error de red: " + err.message, "bad");
+      }
+    }
+
+    function escHtml(str) {
+      return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    function escAttr(str) {
+      return escHtml(str).replace(/'/g,"&#39;");
+    }
+
+    // ── Image upload helpers ─────────────────────────────────────────────────
+
+    function setImgMode(mode) {
+      document.getElementById("img-mode-upload").style.display = mode === "upload" ? "" : "none";
+      document.getElementById("img-mode-url").style.display = mode === "url" ? "" : "none";
+      document.querySelectorAll(".img-tab").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
+    }
+
+    function setImgPreview(src) {
+      const box = document.getElementById("img-preview-box");
+      if (src) {
+        box.innerHTML = `<img src="${escAttr(src)}" alt="" onerror="this.parentElement.innerHTML='<span class=img-preview-ph>📷</span>'">`;
+      } else {
+        box.innerHTML = `<span class="img-preview-ph">📷</span>`;
+      }
+    }
+
+    function setImgStatus(msg, ok) {
+      const el = document.getElementById("img-upload-status");
+      el.textContent = msg;
+      el.style.color = ok === true ? "#86efac" : ok === false ? "#fecaca" : "var(--muted)";
+    }
+
+    async function compressImage(file, maxW = 900, q = 0.82) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        const blobUrl = URL.createObjectURL(file);
+        img.onload = () => {
+          URL.revokeObjectURL(blobUrl);
+          const ratio = Math.min(1, maxW / img.width);
+          const w = Math.round(img.width * ratio);
+          const h = Math.round(img.height * ratio);
+          const canvas = document.createElement("canvas");
+          canvas.width = w; canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          canvas.toBlob((blob) => {
+            if (blob && blob.size > 0) { resolve({ blob, ext: "webp", type: "image/webp" }); return; }
+            canvas.toBlob((b) => resolve({ blob: b || file, ext: "jpg", type: "image/jpeg" }), "image/jpeg", q);
+          }, "image/webp", q);
+        };
+        img.onerror = () => { URL.revokeObjectURL(blobUrl); resolve({ blob: file, ext: "jpg", type: file.type }); };
+        img.src = blobUrl;
+      });
+    }
+
+    async function handleImageFileSelect(file) {
+      const previewBlobUrl = URL.createObjectURL(file);
+      setImgPreview(previewBlobUrl);
+
+      const cloudName = document.getElementById("cloudinaryCloudName")?.value.trim();
+      const uploadPreset = document.getElementById("cloudinaryUploadPreset")?.value.trim();
+
+      if (!cloudName || !uploadPreset) {
+        setImgStatus("⚠️ Configura Cloudinary en ⚙️ Configuración para subir fotos.", false);
+        // Keep local preview so user sees the image
+        document.getElementById("prod-image").value = previewBlobUrl;
+        return;
+      }
+
+      setImgStatus("Comprimiendo…");
+      try {
+        const { blob, ext } = await compressImage(file);
+        const kb = (n) => Math.round(n / 1024);
+        const pct = Math.round((1 - blob.size / file.size) * 100);
+        setImgStatus(`Subiendo ${kb(blob.size)}KB…`);
+
+        const form = new FormData();
+        form.append("file", blob, `image.${ext}`);
+        form.append("upload_preset", uploadPreset);
+
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`, {
+          method: "POST",
+          body: form
+        });
+        const data = await res.json().catch(() => ({}));
+        URL.revokeObjectURL(previewBlobUrl);
+
+        if (!res.ok || !data.secure_url) {
+          setImgStatus("Error Cloudinary: " + (data.error?.message || res.status), false);
+          setImgPreview(document.getElementById("prod-image").value);
+          return;
+        }
+
+        // f_auto,q_auto → Cloudinary sirve WebP automáticamente con calidad óptima
+        const url = data.secure_url.replace("/upload/", "/upload/f_auto,q_auto,w_900/");
+        document.getElementById("prod-image").value = url;
+        setImgPreview(url);
+        setImgStatus(`✓ ${kb(blob.size)}KB subidos${pct > 0 ? " (-" + pct + "%)" : ""}`, true);
+      } catch (err) {
+        URL.revokeObjectURL(previewBlobUrl);
+        setImgStatus("Error: " + err.message, false);
+      }
+    }
+
+    // Tab switching
+    document.querySelectorAll(".img-tab").forEach(btn => {
+      btn.addEventListener("click", () => setImgMode(btn.dataset.mode));
+    });
+
+    // Click preview box → open file picker
+    document.getElementById("img-preview-box").addEventListener("click", () => {
+      document.getElementById("img-file-input").click();
+    });
+
+    // Upload button
+    document.getElementById("img-pick-btn").addEventListener("click", () => {
+      document.getElementById("img-file-input").click();
+    });
+
+    // File selected
+    document.getElementById("img-file-input").addEventListener("change", (e) => {
+      const f = e.target.files?.[0];
+      if (f) handleImageFileSelect(f);
+      e.target.value = "";
+    });
+
+    // Drag & drop onto preview box
+    (function() {
+      const box = document.getElementById("img-preview-box");
+      box.addEventListener("dragover", (e) => { e.preventDefault(); box.style.outline = "2px dashed var(--gold)"; });
+      box.addEventListener("dragleave", () => { box.style.outline = ""; });
+      box.addEventListener("drop", (e) => {
+        e.preventDefault();
+        box.style.outline = "";
+        const f = e.dataTransfer.files?.[0];
+        if (f && f.type.startsWith("image/")) handleImageFileSelect(f);
+      });
+    })();
+
+    // URL input → update hidden + preview
+    document.getElementById("prod-image-url").addEventListener("input", (e) => {
+      document.getElementById("prod-image").value = e.target.value.trim();
+      setImgPreview(e.target.value.trim());
+      setImgStatus("");
+    });
+
+    document.getElementById("save-product-btn").addEventListener("click", saveProduct);
+    document.getElementById("cancel-edit-btn").addEventListener("click", () => {
+      resetProductForm();
+      setProdStatus("Edición cancelada.", "");
+    });
+    document.getElementById("refresh-products").addEventListener("click", loadProducts);
+    document.getElementById("add-category-btn").addEventListener("click", addCategory);
+
+    // Watch the products panel — load products the moment it becomes visible
+    (function() {
+      const panel = document.getElementById("tab-products");
+      if (!panel) return;
+      const obs = new MutationObserver(function() {
+        if (panel.classList.contains("active") && getPassword()) loadProducts();
+      });
+      obs.observe(panel, { attributes: true, attributeFilter: ["class"] });
+      // Safety net: if products panel is already active on load, trigger after 400 ms
+      setTimeout(function() {
+        if (panel.classList.contains("active") && getPassword() && allProducts.length === 0) {
+          loadProducts();
+        }
+      }, 400);
+    })();
+    document.getElementById("new-category").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") addCategory();
+    });
+    document.getElementById("prod-grid").addEventListener("click", (e) => {
+      const editBtn = e.target.closest(".edit-product-btn");
+      if (editBtn) { editProduct(editBtn.dataset.id); return; }
+      const deleteBtn = e.target.closest(".delete-product-btn");
+      if (deleteBtn) {
+        const product = allProducts.find((p) => p.id === deleteBtn.dataset.id);
+        deleteProduct(deleteBtn.dataset.id, product?.name || "producto");
+      }
+    });
+    document.getElementById("cat-list").addEventListener("click", (e) => {
+      const editBtn = e.target.closest(".edit-category-btn");
+      if (editBtn) { renameCategory(editBtn.dataset.category); return; }
+      const deleteBtn = e.target.closest(".delete-category-btn");
+      if (deleteBtn) deleteCategory(deleteBtn.dataset.category);
+    });
+
+    // View toggles
+    document.getElementById("view-table-btn").addEventListener("click", () => {
+      prodView = "table";
+      document.getElementById("view-table-btn").classList.add("active");
+      document.getElementById("view-grid-btn").classList.remove("active");
+      renderProducts(allProducts);
+    });
+    document.getElementById("view-grid-btn").addEventListener("click", () => {
+      prodView = "grid";
+      document.getElementById("view-grid-btn").classList.add("active");
+      document.getElementById("view-table-btn").classList.remove("active");
+      renderProducts(allProducts);
+    });
+
+    // Delegated click handler for table actions too
+    document.getElementById("prod-table-body").addEventListener("click", (e) => {
+      const editBtn = e.target.closest(".edit-product-btn");
+      if (editBtn) { editProduct(editBtn.dataset.id); return; }
+      const deleteBtn = e.target.closest(".delete-product-btn");
+      if (deleteBtn) {
+        const product = allProducts.find((p) => p.id === deleteBtn.dataset.id);
+        deleteProduct(deleteBtn.dataset.id, product?.name || "producto");
+      }
+    });
+
+    // Reload data when switching tabs
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (btn.dataset.tab === "products" && getPassword()) loadProducts();
+        if (btn.dataset.tab === "messages" && getPassword()) loadMessages();
+      });
+    });
+
+    // ===== MESSAGES =====
+    let allMessages = [];
+    let msgFilter = "all";
+
+    async function loadMessages() {
+      const pw = getPassword();
+      if (!pw) return;
+      const list = document.getElementById("msg-list");
+      list.innerHTML = '<div class="empty-state" style="padding:32px;text-align:center;color:var(--muted)">Cargando mensajes...</div>';
+      try {
+        const res = await fetch("/api/messages", {
+          headers: { "x-admin-password": pw },
+          cache: "no-store"
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          list.innerHTML = '<div class="empty-state" style="padding:32px;text-align:center;color:#fecaca">No se pueden cargar mensajes. Verifique su contraseña o configuración Cloudflare. HTTP ' + res.status + '</div>';
+          return;
+        }
+        allMessages = data.messages || [];
+        renderMessages();
+        updateMsgBadge();
+      } catch (err) {
+        list.innerHTML = '<div class="empty-state" style="padding:32px;text-align:center;color:#fecaca">Se produjo un error de red al descargar mensajes..</div>';
+      }
+    }
+
+    function renderMessages() {
+      const list = document.getElementById("msg-list");
+      let msgs = allMessages;
+      if (msgFilter === "unread") msgs = msgs.filter(m => !m.read);
+      if (msgFilter === "read") msgs = msgs.filter(m => m.read);
+      document.getElementById("msg-count").textContent = msgs.length;
+      if (!msgs.length) {
+        list.innerHTML = '<div class="empty-state" style="padding:48px;text-align:center">' + (msgFilter !== "all" ? "No hay mensajes en esta categoría.." : "Aún no hay mensajes.") + "</div>";
+        return;
+      }
+      list.innerHTML = msgs.map(m => {
+        const date = new Date(m.date).toLocaleString("ar", { dateStyle: "short", timeStyle: "short" });
+        const unread = !m.read;
+        const replies = Array.isArray(m.replies) ? m.replies : [];
+        const repliesHtml = replies.length ? `<div class="msg-replies">
+          <div class="msg-replies-title">Respuestas enviadas (${replies.length})</div>
+          ${replies.map(r => {
+            const replyDate = r.date ? new Date(r.date).toLocaleString("ar", { dateStyle: "short", timeStyle: "short" }) : "";
+            return `<div class="msg-reply-item">
+              <div class="msg-reply-date">${escHtml(replyDate)}</div>
+              <div class="msg-reply-body">${escHtml(r.body || "")}</div>
+            </div>`;
+          }).join("")}
+        </div>` : "";
+        return `<div class="msg-card${unread ? " unread" : ""}">
+          <div class="msg-card-header">
+            <div>
+              <div class="msg-sender">${unread ? '<span class="unread-dot"></span>' : ""}${escHtml(m.name)}</div>
+              <div class="msg-from-email">${escHtml(m.email)}</div>
+            </div>
+            <div class="msg-meta">
+              <span class="badge ${m.lang === "ar" ? "badge-paypal" : "badge-stripe"}">${escHtml((m.lang||"en").toUpperCase())}</span>
+              <span class="msg-date">${date}</span>
+            </div>
+          </div>
+          <div class="msg-subject-row">el tema: ${escHtml(m.subject)}</div>
+          <div class="msg-body">${escHtml(m.message)}</div>
+          ${repliesHtml}
+          <div class="msg-actions">
+            <button class="primary reply-btn" type="button" data-id="${escAttr(m.id)}" style="min-height:34px;padding:4px 14px;font-size:.82rem">✉ ${replies.length ? "Otra respuesta" : "responder"}</button>
+            <button class="secondary toggle-read-btn" type="button" data-id="${escAttr(m.id)}" data-read="${m.read ? "1" : "0"}" style="min-height:34px;padding:4px 12px;font-size:.82rem">${unread ? "✓ Enseñar como lectura" : "↺ Marcar como ilegible"}</button>
+            <button class="danger delete-msg-btn" type="button" data-id="${escAttr(m.id)}" style="min-height:34px;padding:4px 12px;font-size:.82rem">borrar</button>
+          </div>
+          <div class="reply-form" id="reply-${escAttr(m.id)}">
+            <p style="margin:0 0 8px;font-size:.82rem;color:var(--muted);font-weight:800">Enviar una respuesta a ${escHtml(m.name)} &lt;${escHtml(m.email)}&gt;</p>
+            <textarea placeholder="Escribe tu respuesta aquí..." rows="4"></textarea>
+            <div class="reply-form-footer">
+              <button class="secondary cancel-reply-btn" type="button" data-id="${escAttr(m.id)}" style="min-height:34px;padding:4px 12px;font-size:.82rem">cancelación</button>
+              <button class="primary send-reply-btn" type="button" data-id="${escAttr(m.id)}" style="min-height:34px;padding:4px 14px;font-size:.82rem">Enviar respuesta</button>
+            </div>
+            <div class="reply-status" style="display:none;margin-top:8px;font-size:.82rem;padding:8px 10px;border-radius:6px"></div>
+          </div>
+        </div>`;
+      }).join("");
+    }
+
+    function updateMsgBadge() {
+      const unread = allMessages.filter(m => !m.read).length;
+      const badge = document.getElementById("msg-badge");
+      if (!badge) return;
+      badge.textContent = unread;
+      badge.style.display = unread > 0 ? "" : "none";
+    }
+
+    async function toggleMessageRead(id, currentlyRead) {
+      const pw = getPassword();
+      if (!pw) return;
+      try {
+        const res = await fetch("/api/messages?id=" + encodeURIComponent(id), {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json", "x-admin-password": pw },
+          body: JSON.stringify({ read: !currentlyRead })
+        });
+        if (!res.ok) return;
+        const msg = allMessages.find(m => m.id === id);
+        if (msg) msg.read = !currentlyRead;
+        renderMessages();
+        updateMsgBadge();
+      } catch (_) {}
+    }
+
+    async function deleteMessage(id) {
+      if (!confirm("¿Quieres eliminar este mensaje? Esta acción no se puede deshacer..")) return;
+      const pw = getPassword();
+      if (!pw) return;
+      try {
+        await fetch("/api/messages?id=" + encodeURIComponent(id), {
+          method: "DELETE",
+          headers: { "x-admin-password": pw }
+        });
+        allMessages = allMessages.filter(m => m.id !== id);
+        renderMessages();
+        updateMsgBadge();
+      } catch (_) {}
+    }
+
+    async function sendReply(id) {
+      const pw = getPassword();
+      if (!pw) return;
+      const form = document.getElementById("reply-" + id);
+      if (!form) return;
+      const textarea = form.querySelector("textarea");
+      const statusEl = form.querySelector(".reply-status");
+      const sendBtn = form.querySelector(".send-reply-btn");
+      const replyBody = textarea.value.trim();
+      if (!replyBody) { showReplyStatus(statusEl, "Escribe un mensaje antes de enviar..", false); return; }
+      sendBtn.disabled = true;
+      sendBtn.textContent = "Envío...";
+      try {
+        const res = await fetch("/api/messages?id=" + encodeURIComponent(id) + "&action=reply", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-admin-password": pw },
+          body: JSON.stringify({ body: replyBody })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok) {
+          showReplyStatus(statusEl, "Respuesta enviada exitosamente.", true);
+          textarea.value = "";
+          const msg = allMessages.find(m => m.id === id);
+          if (msg) {
+            if (data.message) Object.assign(msg, data.message);
+            else {
+              msg.read = true;
+              msg.replies = Array.isArray(msg.replies) ? msg.replies : [];
+              msg.replies.push({ body: replyBody, date: new Date().toISOString(), by: "admin" });
+            }
+          }
+          updateMsgBadge();
+        } else {
+          showReplyStatus(statusEl, "error: " + (data.error || "No se pudo enviar la respuesta."), false);
+        }
+      } catch (_) {
+        showReplyStatus(statusEl, "Se ha producido un error de red.", false);
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = "Enviar respuesta";
+      }
+    }
+
+    async function sendNewMessage() {
+      const pw = getPassword();
+      if (!pw) return;
+      const statusEl = document.getElementById("new-msg-status");
+      const btn = document.getElementById("send-new-msg");
+      const emailEl = document.getElementById("new-msg-email");
+      const nameEl = document.getElementById("new-msg-name");
+      const subjectEl = document.getElementById("new-msg-subject");
+      const bodyEl = document.getElementById("new-msg-body");
+      const email = emailEl.value.trim();
+      const name = nameEl.value.trim();
+      const subject = subjectEl.value.trim() || "Mensaje de Raqmiy Digital";
+      const body = bodyEl.value.trim();
+
+      if (!email || !body) {
+        showReplyStatus(statusEl, "Escribe el correo electrónico y el mensaje del cliente antes de enviar..", false);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Envío...";
+      showReplyStatus(statusEl, "Se está enviando el mensaje...", true);
+
+      try {
+        const res = await fetch("/api/messages?action=send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-admin-password": pw },
+          body: JSON.stringify({ email, name, subject, body })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok) {
+          showReplyStatus(statusEl, "El mensaje fue enviado en árabe exitosamente..", true);
+          emailEl.value = "";
+          nameEl.value = "";
+          bodyEl.value = "";
+          subjectEl.value = "Mensaje de Raqmiy Digital";
+          if (data.message) {
+            allMessages = [data.message, ...allMessages.filter(m => m.id !== data.message.id)];
+            renderMessages();
+            updateMsgBadge();
+          }
+        } else {
+          showReplyStatus(statusEl, "error: " + (data.detail || data.error || "El mensaje no se pudo enviar.."), false);
+        }
+      } catch (_) {
+        showReplyStatus(statusEl, "Se ha producido un error de red.", false);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "enviar mensaje";
+      }
+    }
+
+    function showReplyStatus(el, msg, ok) {
+      el.style.display = "block";
+      el.style.background = ok ? "rgba(34,197,94,.12)" : "rgba(239,68,68,.12)";
+      el.style.border = "1px solid " + (ok ? "rgba(34,197,94,.3)" : "rgba(239,68,68,.3)");
+      el.style.color = ok ? "#bbf7d0" : "#fecaca";
+      el.textContent = msg;
+    }
+
+    document.getElementById("msg-list").addEventListener("click", (e) => {
+      const toggleBtn = e.target.closest(".toggle-read-btn");
+      if (toggleBtn) { toggleMessageRead(toggleBtn.dataset.id, toggleBtn.dataset.read === "1"); return; }
+      const deleteBtn = e.target.closest(".delete-msg-btn");
+      if (deleteBtn) { deleteMessage(deleteBtn.dataset.id); return; }
+      const replyBtn = e.target.closest(".reply-btn");
+      if (replyBtn) {
+        const form = document.getElementById("reply-" + replyBtn.dataset.id);
+        if (form) { form.classList.toggle("open"); if (form.classList.contains("open")) form.querySelector("textarea").focus(); }
+        return;
+      }
+      const cancelBtn = e.target.closest(".cancel-reply-btn");
+      if (cancelBtn) {
+        const form = document.getElementById("reply-" + cancelBtn.dataset.id);
+        if (form) { form.classList.remove("open"); form.querySelector("textarea").value = ""; }
+        return;
+      }
+      const sendBtn = e.target.closest(".send-reply-btn");
+      if (sendBtn) { sendReply(sendBtn.dataset.id); return; }
+    });
+
+    document.querySelectorAll("#tab-messages .filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#tab-messages .filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        msgFilter = btn.dataset.filter;
+        renderMessages();
+      });
+    });
+
+    document.getElementById("refresh-messages").addEventListener("click", loadMessages);
+    document.getElementById("send-new-msg").addEventListener("click", sendNewMessage);
+
+    // Synchronous immediate render — fires the instant the script tag parses,
+    // before ANY async events. Shows cached products with zero delay on refresh.
+    (function() {
+      var pw = readStoredPassword();
+      if (pw) passwordEl.value = pw;
+      if (!getPassword()) {
+        var lsOk = false; try { lsOk = !!localStorage; } catch(e) {}
+        var winPw = ""; try { var _wm = (window.name||"").match(/^adminpw:(.+)/); winPw = _wm ? _wm[1] : ""; } catch(e) {}
+        setDebug("sin contraseña | ls:" + (lsOk?"ok":"bloq") + " win:" + (winPw?"sí":"no") + " — pulsa Entrar");
+        return;
+      }
+      try {
+        var _cp = JSON.parse(localStorage.getItem("admin_products_v1") || "null");
+        var _cc = JSON.parse(localStorage.getItem("admin_categories_v1") || "null");
+        if (Array.isArray(_cp) && _cp.length > 0) {
+          allProducts = _cp;
+          if (Array.isArray(_cc) && _cc.length > 0) allCategories = _cc;
+          renderCategoryOptions();
+          renderCategoryList();
+          renderProducts(allProducts);
+          setProdStatus("✓ " + _cp.length + " productos (caché). Verificando…", "ok");
+          setDebug("caché: " + _cp.length + " productos | cargando API…");
+        } else {
+          setDebug("caché: vacía | llamando API…");
+        }
+      } catch (_e) {
+        setDebug("caché: error (" + _e.message + ") | llamando API…");
+      }
+    })();
+
+  </script>
+</body>
+</html>
